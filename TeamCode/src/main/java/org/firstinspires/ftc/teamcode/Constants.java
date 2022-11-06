@@ -15,11 +15,13 @@ public class Constants {
     public static Servo clawL;
     public static Servo clawR;
 
+    // Not used rn but jic
     public enum Color {
         RED,
         BLUE
     }
 
+    // Instead of having to memorize the values this makes it easier
     public enum ClawPosition {
         OPEN,
         CLOSED
@@ -27,22 +29,23 @@ public class Constants {
 
     public static Color alliance;
 
+    // Not used rn
     public static double waitTimeDrop = 0.75;
     public static double waitTimePickup = 0.75;
 
-    public static int liftTargetHigh = 100;
-    public static int liftError = 20;
-    public static int turretError = 20;
+    public static int liftTargetHigh = 100; // Encoder value for the lift in up position
+    public static int liftError = 20; // Amount of error allowed for lift positions (sbf as is)
+    public static int turretError = 20; // ^
 
-    public static int turretTarget90 = 50;
-    public static int turretTarget180 = 100;
-    public static int turretTargetNeg90 = -50;
+    public static int turretTarget90 = 50; // Encoder value for the turret at right 90 degree position
+    public static int turretTarget180 = 100; // Encoder value for the turret at back 180 degree position
+    public static int turretTargetNeg90 = -50; // Encoder value for the turret at left 90 degree position
 
-    public static double turretPower = 0.3;
-    public static double liftPower = 0.5;
+    public static double turretPower = 0.3; // Default turret power in auton and teleop automation
+    public static double liftPower = 0.5; // Default lift power in auton and teleop automation
 
-    public static double extendOutPos = 1.0;
-    public static double extendInPos = 0.3;
+    public static double extendOutPos = 1.0; // Servo position on the extension when the extension is out
+    public static double extendInPos = 0.3; // Servo position on the extension when the extenion is in
 
     public static Pose2d startPoseL = new Pose2d(-36, -63, Math.toRadians(180));
     public static Pose2d startPoseR = new Pose2d(36, -63, Math.toRadians(180));
@@ -67,6 +70,7 @@ public class Constants {
     };
 
     public static void setLift(int value, double power) {
+        // sets both lift motors to the value at the default power
         if (value < liftL.getCurrentPosition())
             power *= -1;
 
@@ -80,7 +84,10 @@ public class Constants {
     }
 
     public static void setTurret(int value, boolean isExact, double power) {
+        // isExact is true when we are giving an exact encoder value for the turret
+        // otherwise, it will assume that the value is a degree number
         int target = 0;
+        // set the target based on value and isExact
         if (isExact) {
             target = value;
         } else if (value == 90) {
