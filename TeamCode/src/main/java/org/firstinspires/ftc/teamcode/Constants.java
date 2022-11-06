@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Constants {
     public static DcMotor liftL;
     public static DcMotor liftR;
+    public static DcMotor liftT;
     public static DcMotor turretR;
 
     public static Servo clawL;
@@ -81,6 +82,10 @@ public class Constants {
         liftR.setTargetPosition(-value);
         liftR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         liftR.setPower(-power);
+
+        liftT.setTargetPosition(value);
+        liftT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftT.setPower(power);
     }
 
     public static void setTurret(int value, boolean isExact, double power) {
@@ -126,6 +131,11 @@ public class Constants {
         liftR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        liftT = hardwareMap.dcMotor.get("lift_top");
+        liftT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         turretR = hardwareMap.dcMotor.get("turret_right");
         turretR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

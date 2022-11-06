@@ -18,6 +18,7 @@ public class FirstBot extends LinearOpMode {
 
     DcMotor liftL = null;
     DcMotor liftR = null;
+    DcMotor liftT = null;
 
     Servo clawL = null;
     Servo clawR = null;
@@ -47,6 +48,11 @@ public class FirstBot extends LinearOpMode {
         liftR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        liftT = hardwareMap.dcMotor.get("lift_top");
+        liftT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        liftT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
 //        turretL = hardwareMap.dcMotor.get("turret_left");
 //        turretL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -89,6 +95,7 @@ public class FirstBot extends LinearOpMode {
         if (!g2.a && !g2.y) {
             liftL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             liftR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            liftT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             // squared input
             double liftInput = Math.pow(gamepad2.right_stick_y, 2);
             if (gamepad2.right_stick_y < 0) liftInput *= -1;
@@ -96,6 +103,7 @@ public class FirstBot extends LinearOpMode {
             // opposite powers
             liftL.setPower(liftInput);
             liftR.setPower(-liftInput);
+            liftT.setPower(liftInput);
         }
 
         //Dpad right -> turret goes to 90 degrees (right)
@@ -189,7 +197,9 @@ public class FirstBot extends LinearOpMode {
 
         telemetry.addData("Left lift position", liftL.getCurrentPosition());
         telemetry.addData("Right lift position", liftR.getCurrentPosition());
+        telemetry.addData("Top lift position", liftT.getCurrentPosition());
         telemetry.addData("Turret position", turretR.getCurrentPosition());
+        telemetry.addData("Extension position", extend.getPosition());
         telemetry.update();
     }
 }
