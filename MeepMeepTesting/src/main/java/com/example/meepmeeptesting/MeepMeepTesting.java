@@ -5,13 +5,12 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
-import org.firstinspires.ftc.teamcode.auton.Constants;
 
 public class MeepMeepTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
-        Pose2d startPoseL = Constants.startPose;
+        Pose2d startPoseL = new Pose2d(-36,-63,Math.toRadians(180));
         Pose2d startPoseR = new Pose2d(36,-63,Math.toRadians(180));
         Pose2d pickupL = new Pose2d(-61,-12,Math.toRadians(180));
         Pose2d mainDropL = new Pose2d(-24,-9,Math.toRadians(180));
