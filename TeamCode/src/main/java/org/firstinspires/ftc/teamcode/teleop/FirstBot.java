@@ -163,12 +163,10 @@ public class FirstBot extends LinearOpMode {
         drive.setWeightedDrivePower(new Pose2d(y, x, turn));
 
         if (gamepad2.right_bumper) {
-            clawL.setPosition(1);
-            clawR.setPosition(0);
+            Constants.setClaw(Constants.ClawPosition.CLOSED);
         }
         if (gamepad2.left_bumper) {
-            clawL.setPosition(.4);
-            clawR.setPosition(.6);
+            Constants.setClaw(Constants.ClawPosition.OPEN);
         }
 
         extend.setPosition(gamepad2.right_trigger * (Constants.extendOutPos - Constants.extendInPos) + Constants.extendInPos);
