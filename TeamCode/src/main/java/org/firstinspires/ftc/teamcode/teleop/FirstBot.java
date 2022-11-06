@@ -171,7 +171,7 @@ public class FirstBot extends LinearOpMode {
             clawR.setPosition(.6);
         }
 
-        extend.setPosition(gamepad2.left_trigger * (Constants.extendOutPos - Constants.extendInPos) + Constants.extendInPos);
+        extend.setPosition(gamepad2.right_trigger * (Constants.extendOutPos - Constants.extendInPos) + Constants.extendInPos);
 
         telemetry.addData("Left lift position", liftL.getCurrentPosition());
         telemetry.addData("Right lift position", liftR.getCurrentPosition());
