@@ -15,6 +15,7 @@ public class Constants {
 
     public static Servo clawL;
     public static Servo clawR;
+    public static Servo extend = null;
 
     // Not used rn but jic
     public enum Color {
@@ -45,8 +46,8 @@ public class Constants {
     public static double turretPower = 0.3; // Default turret power in auton and teleop automation
     public static double liftPower = 0.5; // Default lift power in auton and teleop automation
 
-    public static double extendOutPos = 1.0; // Servo position on the extension when the extension is out
-    public static double extendInPos = 0.3; // Servo position on the extension when the extenion is in
+    public static double extendOutPos = 0.5; // Servo position on the extension when the extension is out
+    public static double extendInPos = 1.0; // Servo position on the extension when the extenion is in
 
     public static Pose2d startPoseL = new Pose2d(-36, -63, Math.toRadians(180));
     public static Pose2d startPoseR = new Pose2d(36, -63, Math.toRadians(180));
@@ -85,7 +86,7 @@ public class Constants {
 
         liftT.setTargetPosition(value);
         liftT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftT.setPower(power);
+        liftT.setPower(-power);
     }
 
     public static void setTurret(int value, boolean isExact, double power) {
@@ -142,6 +143,8 @@ public class Constants {
 
         clawL = hardwareMap.servo.get("left_claw");
         clawR = hardwareMap.servo.get("right_claw");
+
+        extend = hardwareMap.servo.get("extend");
 
         setClaw(ClawPosition.CLOSED);
     }

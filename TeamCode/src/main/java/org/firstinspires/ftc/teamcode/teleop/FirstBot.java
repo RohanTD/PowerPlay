@@ -39,35 +39,18 @@ public class FirstBot extends LinearOpMode {
         g1 = gamepad1;
         g2 = gamepad2;
 
-        liftL = hardwareMap.dcMotor.get("lift_right");
-        liftL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        liftL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        Constants.initHardware(hardwareMap);
 
-        liftR = hardwareMap.dcMotor.get("lift_left");
-        liftR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        liftR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftL = Constants.liftL;
+        liftR = Constants.liftR;
+        liftT = Constants.liftT;
 
-        liftT = hardwareMap.dcMotor.get("lift_top");
-        liftT.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftT.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        liftT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        clawL = Constants.clawL;
+        clawR = Constants.clawR;
 
-//        turretL = hardwareMap.dcMotor.get("turret_left");
-//        turretL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        turretL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        turretL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        extend = Constants.extend;
 
-        turretR = hardwareMap.dcMotor.get("turret_right");
-        turretR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        turretR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        turretR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        clawL = hardwareMap.servo.get("left_claw");
-        clawR = hardwareMap.servo.get("right_claw");
-
-        extend = hardwareMap.servo.get("extend");
+        turretR = Constants.turretR;
 
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -103,7 +86,10 @@ public class FirstBot extends LinearOpMode {
             // opposite powers
             liftL.setPower(liftInput);
             liftR.setPower(-liftInput);
-            liftT.setPower(liftInput);
+            liftT.setPower(-liftInput);
+//            liftL.setPower(gamepad2.right_stick_y);
+//            liftR.setPower(-gamepad2.right_stick_y);
+//            liftT.setPower(-gamepad2.left_stick_y);
         }
 
         //Dpad right -> turret goes to 90 degrees (right)
@@ -193,7 +179,7 @@ public class FirstBot extends LinearOpMode {
         // when the trigger is 0, the extension will be at Constants.extendInPos
         // when the trigger is 1, the extension will be at Constants.extendOutPos
         // in between, the extension will be set proportionally
-        extend.setPosition(gamepad2.right_trigger * (Constants.extendOutPos - Constants.extendInPos) + Constants.extendInPos);
+        extend.setPosition((1 - gamepad2.right_trigger) * (Constants.extendInPos - Constants.extendOutPos) + Constants.extendOutPos);
 
         telemetry.addData("Left lift position", liftL.getCurrentPosition());
         telemetry.addData("Right lift position", liftR.getCurrentPosition());
