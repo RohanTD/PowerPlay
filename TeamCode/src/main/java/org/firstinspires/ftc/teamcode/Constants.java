@@ -35,18 +35,18 @@ public class Constants {
     public static double waitTimeDrop = 0.75;
     public static double waitTimePickup = 0.75;
 
-    public static int liftTargetHigh = 100; // Encoder value for the lift in up position
-    public static int liftError = 20; // Amount of error allowed for lift positions (sbf as is)
+    public static int liftTargetHigh = -4000; // Encoder value for the lift in up position
+    public static int liftError = 100; // Amount of error allowed for lift positions (sbf as is)
     public static int turretError = 20; // ^
 
-    public static int turretTarget90 = 50; // Encoder value for the turret at right 90 degree position
-    public static int turretTarget180 = 100; // Encoder value for the turret at back 180 degree position
-    public static int turretTargetNeg90 = -50; // Encoder value for the turret at left 90 degree position
+    public static int turretTarget90 = 696; // Encoder value for the turret at right 90 degree position
+    public static int turretTarget180 = -1450; // Encoder value for the turret at back 180 degree position
+    public static int turretTargetNeg90 = -740; // Encoder value for the turret at left 90 degree position
 
     public static double turretPower = 0.3; // Default turret power in auton and teleop automation
     public static double liftPower = 0.5; // Default lift power in auton and teleop automation
 
-    public static double extendOutPos = 0.5; // Servo position on the extension when the extension is out
+    public static double extendOutPos = 0.6; // Servo position on the extension when the extension is out
     public static double extendInPos = 1.0; // Servo position on the extension when the extenion is in
 
     public static Pose2d startPoseL = new Pose2d(-36, -63, Math.toRadians(180));
@@ -73,18 +73,19 @@ public class Constants {
 
     public static void setLift(int value, double power) {
         // sets both lift motors to the value at the default power
-        if (value < liftL.getCurrentPosition())
+        if (value > liftR.getCurrentPosition())
             power *= -1;
 
-        liftL.setTargetPosition(value);
+        liftL.setTargetPosition(-value);
         liftL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftL.setPower(power);
+        liftL.setPower(-power);
 
-        liftR.setTargetPosition(-value);
+
+        liftR.setTargetPosition(value);
         liftR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftR.setPower(-power);
+        liftR.setPower(power);
 
-        liftT.setTargetPosition(value);
+        liftT.setTargetPosition(-value);
         liftT.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         liftT.setPower(-power);
     }
@@ -92,6 +93,7 @@ public class Constants {
     public static void setTurret(int value, boolean isExact, double power) {
         // isExact is true when we are giving an exact encoder value for the turret
         // otherwise, it will assume that the value is a degree number
+        power *= -1;
         int target = 0;
         // set the target based on value and isExact
         if (isExact) {
@@ -107,7 +109,7 @@ public class Constants {
         }
         if (target < turretR.getCurrentPosition())
             power *= -1;
-        turretR.setTargetPosition((int) target);
+        turretR.setTargetPosition(target);
         turretR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         turretR.setPower(power);
     }
@@ -123,12 +125,12 @@ public class Constants {
     }
 
     public static void initHardware(HardwareMap hardwareMap) {
-        liftL = hardwareMap.dcMotor.get("lift_right");
+        liftL = hardwareMap.dcMotor.get("lift_left");
         liftL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        liftR = hardwareMap.dcMotor.get("lift_left");
+        liftR = hardwareMap.dcMotor.get("lift_right");
         liftR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -140,6 +142,8 @@ public class Constants {
 
         turretR = hardwareMap.dcMotor.get("turret_right");
         turretR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        turretR.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        turretR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         clawL = hardwareMap.servo.get("left_claw");
         clawR = hardwareMap.servo.get("right_claw");
