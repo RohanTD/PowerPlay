@@ -68,21 +68,21 @@ public class FirstBot extends LinearOpMode {
 
     public void teleopAuto() {
         // when you hold y, the lift will move upward until it hits the target position (liftTargetHigh)
-        if (g2.y && Math.abs(liftR.getCurrentPosition() - Constants.liftTargetHigh) >= Constants.liftError) {
+        if (g2.dpad_up && Math.abs(liftR.getCurrentPosition() - Constants.liftTargetHigh) >= Constants.liftError) {
             Constants.setLift(Constants.liftTargetHigh, Constants.liftPower); // you can see this method in Constants
         }
         // when you hold a, the lift will move downward until it gets down to 0
-        if (g2.a && Math.abs(liftR.getCurrentPosition()) >= Constants.liftError) {
+        if ((g2.dpad_down || g2.y) && Math.abs(liftR.getCurrentPosition()) >= Constants.liftError) {
             Constants.setLift(0, Constants.liftPower);
         }
         // if neither a nor y are pressed, the right joystick will be controlling lift
-        if (!g2.a && !g2.y) {
+        if (!g2.dpad_down && !g2.dpad_up && !g2.y) {
             liftL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             liftR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             liftT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             // squared input
-            double liftInput = Math.pow(gamepad2.right_stick_y, 2);
-            if (gamepad2.right_stick_y < 0) liftInput *= -1;
+            double liftInput = Math.pow(gamepad2.left_stick_y, 2);
+            if (gamepad2.left_stick_y < 0) liftInput *= -1;
 
             // opposite powers
             liftL.setPower(-liftInput);
@@ -94,37 +94,36 @@ public class FirstBot extends LinearOpMode {
         }
 
         //Dpad right -> turret goes to 90 degrees (right)
-        if (g2.dpad_right && Math.abs(turretR.getCurrentPosition() - Constants.turretTarget90) >= Constants.turretError) {
+        if (g2.b && Math.abs(turretR.getCurrentPosition() - Constants.turretTarget90) >= Constants.turretError) {
             Constants.setTurret(90, false, Constants.turretPower); // look at this method in Constants
         }
         //Dpad left -> turret goes to -90 degrees (left)
-        if (g2.dpad_left && Math.abs(turretR.getCurrentPosition() - Constants.turretTargetNeg90) >= Constants.turretError) {
+        else if (g2.x && Math.abs(turretR.getCurrentPosition() - Constants.turretTargetNeg90) >= Constants.turretError) {
             Constants.setTurret(-90, false, Constants.turretPower);
         }
         //Dpad down -> turret goes to 180 degrees (backward)
-        if (g2.dpad_down && Math.abs(turretR.getCurrentPosition() - Constants.turretTarget180) >= Constants.turretError) {
+        else if (g2.a && Math.abs(turretR.getCurrentPosition() - Constants.turretTarget180) >= Constants.turretError) {
             Constants.setTurret(180, false, Constants.turretPower);
         }
         //Dpad up -> turret goes to 0 degrees (forward)
-        if (g2.dpad_up && Math.abs(turretR.getCurrentPosition()) >= Constants.turretError) {
+        else if (g2.y && Math.abs(turretR.getCurrentPosition()) >= Constants.turretError) {
             Constants.setTurret(0, false, Constants.turretPower);
         }
         //If no dpads are pressed, left joystick will control turret
-        if (!g2.dpad_left && !g2.dpad_down && !g2.dpad_up && !g2.dpad_right) {
+        else if (!g2.x && !g2.a && !g2.y && !g2.b) {
             turretR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             // squared input, 0.5 speed
-//            double turretInput = -0.3 * gamepad2.left_stick_x;
-            double turretInput = -Math.pow(gamepad2.left_stick_x, 2) * 0.5;
+            double turretInput = Math.pow(gamepad2.right_stick_x, 2) * 0.5;
             // left trigger = slow mode
-//            if (g2.left_trigger == 1) turretInput *= 0.5;
-            if (gamepad2.left_stick_x < 0) turretInput *= -1;
+            if (g2.left_trigger == 1) turretInput *= 0.7;
+            if (gamepad2.right_stick_x < 0) turretInput *= -1;
 
 //        turretL.setPower(turretInput);
             turretR.setPower(turretInput);
         }
 
         // press b -> resets all encoders
-        if (g2.b) {
+        if (g2.dpad_right) {
             liftL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             liftL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -150,11 +149,11 @@ public class FirstBot extends LinearOpMode {
         double power = 2.0;
 
         // slow mode = right trigger
-        if (g1.right_trigger == 1) {
-            multiplier = 0.4;
+        if (g1.right_bumper) {
+            multiplier = 0.3;
         }
         // fast mode = left trigger
-        if (g1.left_trigger == 1) {
+        if (g1.left_bumper) {
             multiplier = 1;
         }
 
@@ -186,24 +185,18 @@ public class FirstBot extends LinearOpMode {
         // when the trigger is 1, the extension will be at Constants.extendOutPos
         // in between, the extension will be set proportionally
 
-        double extensionValue = (gamepad2.right_trigger + gamepad2.left_trigger) / 2.0;
+        double extensionValue = (Math.sqrt(gamepad2.right_trigger) + Math.sqrt(gamepad2.left_trigger)) / 2.0;
         extend.setPosition((1 - extensionValue) * (Constants.extendInPos - Constants.extendOutPos) + Constants.extendOutPos);
 
         telemetry.addData("Turret power", turretR.getPower());
         telemetry.addData("Turret position", turretR.getCurrentPosition());
         telemetry.addData("Turret target", turretR.getTargetPosition());
 
-        telemetry.addData("Left lift position", liftL.getCurrentPosition());
-        telemetry.addData("Right lift position", liftR.getCurrentPosition());
-        telemetry.addData("Top lift position", liftT.getCurrentPosition());
-        telemetry.addData("Extension position", extend.getPosition());
-        telemetry.addData("LiftL power", liftL.getPower());
-        telemetry.addData("LiftR power", liftR.getPower());
-        telemetry.addData("LiftT power", liftT.getPower());
-        telemetry.addData("LiftL target", liftL.getTargetPosition());
-        telemetry.addData("LiftR target", liftR.getTargetPosition());
+        telemetry.addData("Lift position", liftR.getCurrentPosition());
+        telemetry.addData("Lift power", liftL.getPower());
         telemetry.addData("LiftT target", liftT.getTargetPosition());
 
+        telemetry.addData("Extension position", extend.getPosition());
 
         telemetry.update();
     }

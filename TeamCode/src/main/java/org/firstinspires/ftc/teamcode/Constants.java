@@ -35,18 +35,18 @@ public class Constants {
     public static double waitTimeDrop = 0.75;
     public static double waitTimePickup = 0.75;
 
-    public static int liftTargetHigh = -4000; // Encoder value for the lift in up position
-    public static int liftError = 100; // Amount of error allowed for lift positions (sbf as is)
+    public static int liftTargetHigh = -4100; // Encoder value for the lift in up position
+    public static int liftError = 20; // Amount of error allowed for lift positions (sbf as is)
     public static int turretError = 20; // ^
 
-    public static int turretTarget90 = 696; // Encoder value for the turret at right 90 degree position
+    public static int turretTarget90 = 750; // Encoder value for the turret at right 90 degree position
     public static int turretTarget180 = -1450; // Encoder value for the turret at back 180 degree position
     public static int turretTargetNeg90 = -740; // Encoder value for the turret at left 90 degree position
 
-    public static double turretPower = 0.3; // Default turret power in auton and teleop automation
-    public static double liftPower = 0.5; // Default lift power in auton and teleop automation
+    public static double turretPower = 0.5; // Default turret power in auton and teleop automation
+    public static double liftPower = 1; // Default lift power in auton and teleop automation
 
-    public static double extendOutPos = 0.6; // Servo position on the extension when the extension is out
+    public static double extendOutPos = 0.55; // Servo position on the extension when the extension is out
     public static double extendInPos = 1.0; // Servo position on the extension when the extenion is in
 
     public static Pose2d startPoseL = new Pose2d(-36, -63, Math.toRadians(180));
@@ -93,7 +93,7 @@ public class Constants {
     public static void setTurret(int value, boolean isExact, double power) {
         // isExact is true when we are giving an exact encoder value for the turret
         // otherwise, it will assume that the value is a degree number
-        power *= -1;
+        double powerT = -power;
         int target = 0;
         // set the target based on value and isExact
         if (isExact) {
@@ -108,10 +108,10 @@ public class Constants {
             target = 0;
         }
         if (target < turretR.getCurrentPosition())
-            power *= -1;
+            powerT *= -1;
         turretR.setTargetPosition(target);
         turretR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        turretR.setPower(power);
+        turretR.setPower(powerT);
     }
 
     public static void setClaw(ClawPosition position) {
@@ -149,7 +149,5 @@ public class Constants {
         clawR = hardwareMap.servo.get("right_claw");
 
         extend = hardwareMap.servo.get("extend");
-
-        setClaw(ClawPosition.CLOSED);
     }
 }

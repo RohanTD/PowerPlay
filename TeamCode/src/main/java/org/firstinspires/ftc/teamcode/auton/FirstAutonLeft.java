@@ -53,6 +53,8 @@ public class FirstAutonLeft extends LinearOpMode {
         clawL = Constants.clawL;
         clawR = Constants.clawR;
 
+        Constants.setClaw(Constants.ClawPosition.CLOSED);
+
         drive = new SampleMecanumDrive(hardwareMap);
 
         TrajectorySequence preload = drive.trajectorySequenceBuilder(startPose)
