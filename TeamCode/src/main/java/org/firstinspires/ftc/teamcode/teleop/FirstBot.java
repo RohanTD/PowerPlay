@@ -25,7 +25,6 @@ public class FirstBot extends LinearOpMode {
     Servo clawR = null;
     Servo extend = null;
 
-    DcMotor turretL = null;
     DcMotor turretR = null;
 
     Gamepad g1 = gamepad1;
@@ -91,9 +90,6 @@ public class FirstBot extends LinearOpMode {
             liftL.setPower(-liftInput);
             liftR.setPower(liftInput);
             liftT.setPower(-liftInput);
-//            liftL.setPower(gamepad2.right_stick_y);
-//            liftR.setPower(-gamepad2.right_stick_y);
-//            liftT.setPower(-gamepad2.left_stick_y);
         }
 
         //Dpad right -> turret goes to 90 degrees (right)
@@ -121,7 +117,6 @@ public class FirstBot extends LinearOpMode {
             if (g2.left_trigger == 1) turretInput *= 0.7;
             if (gamepad2.right_stick_x < 0) turretInput *= -1;
 
-//        turretL.setPower(turretInput);
             turretR.setPower(turretInput);
         }
 
