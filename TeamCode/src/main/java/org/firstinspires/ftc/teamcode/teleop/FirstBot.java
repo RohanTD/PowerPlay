@@ -31,6 +31,9 @@ public class FirstBot extends LinearOpMode {
     Gamepad g1 = gamepad1;
     Gamepad g2 = gamepad2;
 
+    double extensionPos = Constants.extendInPos;
+    double extensionRange = Constants.extendOutPos - Constants.extendInPos;
+
     @Override
     public void runOpMode() throws InterruptedException {
         for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
@@ -185,8 +188,26 @@ public class FirstBot extends LinearOpMode {
         // when the trigger is 1, the extension will be at Constants.extendOutPos
         // in between, the extension will be set proportionally
 
-        double extensionValue = (Math.sqrt(gamepad2.right_trigger) + Math.sqrt(gamepad2.left_trigger)) / 2.0;
-        extend.setPosition((1 - extensionValue) * (Constants.extendInPos - Constants.extendOutPos) + Constants.extendOutPos);
+//        double extensionValue = (Math.sqrt(gamepad2.right_trigger) + Math.sqrt(gamepad2.left_trigger)) / 2.0;
+//        extend.setPosition((1 - extensionValue) * (Constants.extendInPos - Constants.extendOutPos) + Constants.extendOutPos);
+
+        if (gamepad2.right_trigger < 1)
+            extensionPos += (extensionRange * gamepad2.right_trigger * 0.01);
+        else if (gamepad2.right_trigger == 1)
+            extensionPos = Constants.extendOutPos;
+
+        if (gamepad2.left_trigger < 1)
+            extensionPos -= (extensionRange * gamepad2.left_trigger * 0.01);
+        else if (gamepad2.left_trigger == 1)
+            extensionPos = Constants.extendInPos;
+
+        if (extensionPos < Constants.extendOutPos)
+            extensionPos = Constants.extendOutPos;
+        if (extensionPos > Constants.extendInPos)
+            extensionPos = Constants.extendInPos;
+
+        extend.setPosition(extensionPos);
+
 
         telemetry.addData("Turret power", turretR.getPower());
         telemetry.addData("Turret position", turretR.getCurrentPosition());
