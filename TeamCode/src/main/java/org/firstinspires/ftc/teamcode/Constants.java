@@ -35,13 +35,13 @@ public class Constants {
     public static double waitTimeDrop = 0.75;
     public static double waitTimePickup = 0.75;
 
-    public static int liftTargetHigh = -4100; // Encoder value for the lift in up position
+    public static int liftTargetHigh = -4000; // Encoder value for the lift in up position
     public static int liftError = 20; // Amount of error allowed for lift positions (sbf as is)
     public static int turretError = 20; // ^
 
-    public static int turretTarget90 = 750; // Encoder value for the turret at right 90 degree position
-    public static int turretTarget180 = -1450; // Encoder value for the turret at back 180 degree position
-    public static int turretTargetNeg90 = -740; // Encoder value for the turret at left 90 degree position
+    public static int turretTarget90 = -740; // Encoder value for the turret at right 90 degree position
+    public static int turretTarget180 = 1450; // Encoder value for the turret at back 180 degree position
+    public static int turretTargetNeg90 = 750; // Encoder value for the turret at left 90 degree position
 
     public static double turretPower = 0.5; // Default turret power in auton and teleop automation
     public static double liftPower = 1; // Default lift power in auton and teleop automation

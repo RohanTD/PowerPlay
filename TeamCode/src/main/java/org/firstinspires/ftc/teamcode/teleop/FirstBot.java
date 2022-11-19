@@ -32,6 +32,9 @@ public class FirstBot extends LinearOpMode {
 
     double extensionPos = Constants.extendInPos;
     double extensionRange = Constants.extendOutPos - Constants.extendInPos;
+    boolean isHolding = false;
+
+    int holdPos = 0;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -70,15 +73,22 @@ public class FirstBot extends LinearOpMode {
 
     public void teleopAuto() {
         // when you hold y, the lift will move upward until it hits the target position (liftTargetHigh)
-        if (g2.dpad_up && Math.abs(liftR.getCurrentPosition() - Constants.liftTargetHigh) >= Constants.liftError) {
+        if ((g2.dpad_up || g2.y) && Math.abs(liftR.getCurrentPosition() - Constants.liftTargetHigh) >= Constants.liftError) {
             Constants.setLift(Constants.liftTargetHigh, Constants.liftPower); // you can see this method in Constants
         }
         // when you hold a, the lift will move downward until it gets down to 0
-        if ((g2.dpad_down || g2.y) && Math.abs(liftR.getCurrentPosition()) >= Constants.liftError) {
+        if ((g2.dpad_down || g2.a) && Math.abs(liftR.getCurrentPosition()) >= Constants.liftError) {
             Constants.setLift(0, Constants.liftPower);
         }
+        if (g2.dpad_left || Math.abs(g2.left_stick_x) > 0.2){
+            if (!isHolding){
+                isHolding = true;
+                holdPos = liftR.getCurrentPosition();
+            }
+            Constants.setLift(holdPos, Constants.liftPower);
+        }
         // if neither a nor y are pressed, the right joystick will be controlling lift
-        if (!g2.dpad_down && !g2.dpad_up && !g2.y) {
+        if (!g2.dpad_down && !g2.dpad_up && !g2.a && !g2.y && !g2.dpad_left && Math.abs(g2.left_stick_x) < 0.2) {
             liftL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             liftR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             liftT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -86,10 +96,15 @@ public class FirstBot extends LinearOpMode {
             double liftInput = Math.pow(gamepad2.left_stick_y, 2);
             if (gamepad2.left_stick_y < 0) liftInput *= -1;
 
+            isHolding = false;
+            holdPos = 0;
+
             // opposite powers
-            liftL.setPower(-liftInput);
-            liftR.setPower(liftInput);
-            liftT.setPower(-liftInput);
+            if (liftR.getCurrentPosition() > -4500 || gamepad2.left_stick_y < 0) {
+                liftL.setPower(-liftInput);
+                liftR.setPower(liftInput);
+                liftT.setPower(-liftInput);
+            }
         }
 
         //Dpad right -> turret goes to 90 degrees (right)
@@ -101,20 +116,20 @@ public class FirstBot extends LinearOpMode {
             Constants.setTurret(-90, false, Constants.turretPower);
         }
         //Dpad down -> turret goes to 180 degrees (backward)
-        else if (g2.a && Math.abs(turretR.getCurrentPosition() - Constants.turretTarget180) >= Constants.turretError) {
+        else if (g2.y && Math.abs(turretR.getCurrentPosition() - Constants.turretTarget180) >= Constants.turretError) {
             Constants.setTurret(180, false, Constants.turretPower);
         }
         //Dpad up -> turret goes to 0 degrees (forward)
-        else if (g2.y && Math.abs(turretR.getCurrentPosition()) >= Constants.turretError) {
+        else if (g2.a && Math.abs(turretR.getCurrentPosition()) >= Constants.turretError) {
             Constants.setTurret(0, false, Constants.turretPower);
         }
         //If no dpads are pressed, left joystick will control turret
         else if (!g2.x && !g2.a && !g2.y && !g2.b) {
             turretR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             // squared input, 0.5 speed
-            double turretInput = Math.pow(gamepad2.right_stick_x, 2) * 0.5;
+            double turretInput = -Math.pow(gamepad2.right_stick_x, 2) * 0.35;
             // left trigger = slow mode
-            if (g2.left_trigger == 1) turretInput *= 0.7;
+//            if (g2.left_trigger == 1) turretInput *= 0.7;
             if (gamepad2.right_stick_x < 0) turretInput *= -1;
 
             turretR.setPower(turretInput);
@@ -186,19 +201,22 @@ public class FirstBot extends LinearOpMode {
 //        double extensionValue = (Math.sqrt(gamepad2.right_trigger) + Math.sqrt(gamepad2.left_trigger)) / 2.0;
 //        extend.setPosition((1 - extensionValue) * (Constants.extendInPos - Constants.extendOutPos) + Constants.extendOutPos);
 
-        if (gamepad2.right_trigger < 1)
-            extensionPos += (extensionRange * gamepad2.right_trigger * 0.01);
-        else if (gamepad2.right_trigger == 1)
-            extensionPos = Constants.extendOutPos;
+        if (gamepad2.right_trigger <= 1)
+            extensionPos += (extensionRange * gamepad2.right_trigger * 0.03);
+//        else if (gamepad2.right_trigger == 1)
+//            extensionPos = Constants.extendOutPos;
 
         if (gamepad2.left_trigger < 1)
-            extensionPos -= (extensionRange * gamepad2.left_trigger * 0.01);
+            extensionPos -= (extensionRange * gamepad2.left_trigger * 0.03);
         else if (gamepad2.left_trigger == 1)
             extensionPos = Constants.extendInPos;
 
         if (extensionPos < Constants.extendOutPos)
             extensionPos = Constants.extendOutPos;
         if (extensionPos > Constants.extendInPos)
+            extensionPos = Constants.extendInPos;
+
+        if (g2.y || g2.a)
             extensionPos = Constants.extendInPos;
 
         extend.setPosition(extensionPos);
