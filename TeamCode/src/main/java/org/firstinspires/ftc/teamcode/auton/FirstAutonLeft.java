@@ -100,4 +100,3 @@ public class FirstAutonLeft extends LinearOpMode {
     }
 
 }
-//lol
