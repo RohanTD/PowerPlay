@@ -58,10 +58,10 @@ public class FirstAutonLeft extends LinearOpMode {
         drive = new SampleMecanumDrive(hardwareMap);
 
         TrajectorySequence preload = drive.trajectorySequenceBuilder(startPose)
-                .addDisplacementMarker(0.01, Constants.prepareArmB)
+                //.addDisplacementMarker(0.01, Constants.prepareArmB)
                 .lineToLinearHeading(firstAdjustmentPose)
                 .lineToLinearHeading(firstDropPose)
-                .addDisplacementMarker(Constants.resetArm)
+                //.addDisplacementMarker(Constants.resetArm)
                 .lineToLinearHeading(preCyclePose)
                 .build();
 
@@ -90,9 +90,9 @@ public class FirstAutonLeft extends LinearOpMode {
         while (cycleCounter > 0){
             TrajectorySequence cycle = drive.trajectorySequenceBuilder(preCyclePose)
                     .lineToLinearHeading(pickupPose)
-                    .addDisplacementMarker(Constants.prepareArmB)
+                    //.addDisplacementMarker(Constants.prepareArmB)
                     .lineToLinearHeading(mainDropPose)
-                    .addDisplacementMarker(Constants.resetArm)
+                    //.addDisplacementMarker(Constants.resetArm)
                     .build();
             drive.followTrajectorySequence(cycle);
             cycleCounter--;
