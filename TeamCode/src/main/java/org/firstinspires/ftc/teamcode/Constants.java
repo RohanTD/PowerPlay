@@ -51,11 +51,12 @@ public class Constants {
 
     public static Pose2d startPoseL = new Pose2d(-36, -63, Math.toRadians(180));
     public static Pose2d startPoseR = new Pose2d(36, -63, Math.toRadians(180));
-    public static Pose2d pickupL = new Pose2d(-50, -16, Math.toRadians(180));
-    public static Pose2d mainDropL = new Pose2d(-24, -13, Math.toRadians(180));
-    public static Pose2d preCycleL = new Pose2d(-15, -16, Math.toRadians(180));
-    public static Pose2d firstAdjustmentL = new Pose2d(-12, -57, Math.toRadians(180));
-    public static Pose2d firstDropL = new Pose2d(-9, -24, Math.toRadians(180));
+    public static Pose2d pickupL = new Pose2d(-52, -12, Math.toRadians(180));
+    public static Pose2d mainDropL = new Pose2d(-42, -12, Math.toRadians(180));
+    public static Pose2d preCycleL = new Pose2d(-12, -12, Math.toRadians(180));
+    public static Pose2d firstAdjustmentL = new Pose2d(-12, -60, Math.toRadians(180));
+    public static Pose2d firstDropL = new Pose2d(-12, -45, Math.toRadians(180));
+
 
     public static Vector2d parkMiddleL = new Vector2d(-60, -12);
 
