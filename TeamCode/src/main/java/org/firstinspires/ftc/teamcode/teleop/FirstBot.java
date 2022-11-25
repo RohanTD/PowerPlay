@@ -127,7 +127,7 @@ public class FirstBot extends LinearOpMode {
         else if (!g2.x && !g2.a && !g2.y && !g2.b) {
             turretR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             // squared input, 0.5 speed
-            double turretInput = -Math.pow(gamepad2.right_stick_x, 2) * 0.35;
+            double turretInput = -Math.pow(gamepad2.right_stick_x, 2) * 0.55;
             // left trigger = slow mode
 //            if (g2.left_trigger == 1) turretInput *= 0.7;
             if (gamepad2.right_stick_x < 0) turretInput *= -1;
