@@ -157,7 +157,7 @@ public class FirstBot extends LinearOpMode {
         double turn = -gamepad1.right_stick_x;
 
         // only important numbers are here - default movement speed
-        double multiplier = 0.65;
+        double multiplier = 0.72;
         // curve to apply (squared rn)
         double power = 2.0;
 
