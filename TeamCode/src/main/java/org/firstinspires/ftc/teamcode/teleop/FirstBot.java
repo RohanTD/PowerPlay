@@ -42,8 +42,8 @@ public class FirstBot extends LinearOpMode {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
-        g1 = gamepad1;
-        g2 = gamepad2;
+        g1 = gamepad1; //Defining gamepads Aarav Mehta
+        g2 = gamepad2; 
 
         Constants.initHardware(hardwareMap);
 
@@ -51,7 +51,7 @@ public class FirstBot extends LinearOpMode {
         liftR = Constants.liftR;
         liftT = Constants.liftT;
 
-        clawL = Constants.clawL;
+        clawL = Constants.clawL; //Left and right servos on claws Aarav Mehta
         clawR = Constants.clawR;
 
         extend = Constants.extend;
@@ -80,6 +80,7 @@ public class FirstBot extends LinearOpMode {
         if ((g2.dpad_down || g2.a) && Math.abs(liftR.getCurrentPosition()) >= Constants.liftError) {
             Constants.setLift(0, Constants.liftPower);
         }
+        //When you hold d, the lift will stay up and will hold Aarav Mehta
         if (g2.dpad_left || Math.abs(g2.left_stick_x) > 0.2){
             if (!isHolding){
                 isHolding = true;
