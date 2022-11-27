@@ -81,7 +81,7 @@ public class FirstBot extends LinearOpMode {
             Constants.setLift(0, Constants.liftPower);
         }
         //When you hold d, the lift will stay up and will hold Aarav Mehta
-        if (g2.dpad_left || Math.abs(g2.left_stick_x) > 0.2){
+        if (g2.left_stick_y == 0){
             if (!isHolding){
                 isHolding = true;
                 holdPos = liftR.getCurrentPosition();
@@ -89,7 +89,7 @@ public class FirstBot extends LinearOpMode {
             Constants.setLift(holdPos, Constants.liftPower);
         }
         // if neither a nor y are pressed, the right joystick will be controlling lift
-        if (!g2.dpad_down && !g2.dpad_up && !g2.a && !g2.y && !g2.dpad_left && Math.abs(g2.left_stick_x) < 0.2) {
+        if (!g2.dpad_down && !g2.dpad_up && !g2.a && !g2.y && !g2.dpad_left && g2.left_stick_y != 0) {
             liftL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             liftR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             liftT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
