@@ -36,7 +36,7 @@ public class Constants {
     public static double waitTimePickup = 0.75;
 
     public static int liftTargetHigh = -4000; // Encoder value for the lift in up position
-    public static int liftError = 20; // Amount of error allowed for lift positions (sbf as is)
+    public static int liftError = 50; // Amount of error allowed for lift positions (sbf as is)
     public static int turretError = 20; // ^
 
     public static int turretTarget90 = -740; // Encoder value for the turret at right 90 degree position

@@ -84,7 +84,7 @@ public class FirstBot extends LinearOpMode {
 
         // if neither a nor y are pressed, the right joystick will be controlling lift
         if (!g2.dpad_down && !g2.dpad_up && !g2.a && !g2.y && !g2.dpad_left) {
-            if (g2.left_stick_y == 0){
+            if (g2.left_stick_y == 0 && Math.abs(liftR.getCurrentPosition()) >= Constants.liftError){
                 if (!isHolding){
                     isHolding = true;
                     holdPos = liftR.getCurrentPosition();
