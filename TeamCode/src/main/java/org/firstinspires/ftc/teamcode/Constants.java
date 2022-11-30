@@ -44,7 +44,7 @@ public class Constants {
     public static int turretTarget180 = 1450; // Encoder value for the turret at back 180 degree position
     public static int turretTargetNeg90 = 750; // Encoder value for the turret at left 90 degree position
 
-    public static double turretPower = 0.5; // Default turret power in auton and teleop automation
+    public static double turretPower = 0.7; // Default turret power in auton and teleop automation
     public static double liftPower = 1; // Default lift power in auton and teleop automation
 
     public static double extendOutPos = 0.55; // Servo position on the extension when the extension is out
