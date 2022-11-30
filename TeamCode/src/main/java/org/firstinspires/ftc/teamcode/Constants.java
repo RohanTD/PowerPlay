@@ -38,6 +38,7 @@ public class Constants {
     public static int liftTargetHigh = -4000; // Encoder value for the lift in up position
     public static int liftError = 50; // Amount of error allowed for lift positions (sbf as is)
     public static int turretError = 20; // ^
+    public static int liftLimit = -4500;
 
     public static int turretTarget90 = -740; // Encoder value for the turret at right 90 degree position
     public static int turretTarget180 = 1450; // Encoder value for the turret at back 180 degree position
