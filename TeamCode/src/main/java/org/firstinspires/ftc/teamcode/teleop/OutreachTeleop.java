@@ -180,11 +180,11 @@ public class OutreachTeleop extends LinearOpMode {
         drive.setWeightedDrivePower(new Pose2d(y, x, turn));
 
         // right bumper -> close claw
-        if (gamepad2.right_bumper) {
+        if (gamepad1.right_bumper) {
             Constants.setClaw(Constants.ClawPosition.CLOSED);
         }
         // left bumper -> close claw
-        if (gamepad2.left_bumper) {
+        if (gamepad1.left_bumper) {
             Constants.setClaw(Constants.ClawPosition.OPEN);
         }
 
@@ -196,13 +196,13 @@ public class OutreachTeleop extends LinearOpMode {
 //        double extensionValue = (Math.sqrt(gamepad2.right_trigger) + Math.sqrt(gamepad2.left_trigger)) / 2.0;
 //        extend.setPosition((1 - extensionValue) * (Constants.extendInPos - Constants.extendOutPos) + Constants.extendOutPos);
 
-        if (gamepad2.right_trigger <= 1)
-            extensionPos += (extensionRange * gamepad2.right_trigger * 0.03);
+        if (gamepad1.right_trigger <= 1)
+            extensionPos += (extensionRange * gamepad2.right_trigger * Constants.extendSensitivity);
 //        else if (gamepad2.right_trigger == 1)
 //            extensionPos = Constants.extendOutPos;
 
-        if (gamepad2.left_trigger < 1)
-            extensionPos -= (extensionRange * gamepad2.left_trigger * 0.03);
+        if (gamepad1.left_trigger < 1)
+            extensionPos -= (extensionRange * gamepad2.left_trigger * Constants.extendSensitivity);
         else if (gamepad2.left_trigger == 1)
             extensionPos = Constants.extendInPos;
 

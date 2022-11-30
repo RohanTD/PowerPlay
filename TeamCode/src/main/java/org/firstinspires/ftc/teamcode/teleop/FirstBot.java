@@ -206,12 +206,12 @@ public class FirstBot extends LinearOpMode {
 //        extend.setPosition((1 - extensionValue) * (Constants.extendInPos - Constants.extendOutPos) + Constants.extendOutPos);
 
         if (gamepad2.right_trigger <= 1)
-            extensionPos += (extensionRange * gamepad2.right_trigger * 0.03);
+            extensionPos += (extensionRange * gamepad2.right_trigger * Constants.extendSensitivity);
 //        else if (gamepad2.right_trigger == 1)
 //            extensionPos = Constants.extendOutPos;
 
         if (gamepad2.left_trigger < 1)
-            extensionPos -= (extensionRange * gamepad2.left_trigger * 0.03);
+            extensionPos -= (extensionRange * gamepad2.left_trigger * Constants.extendSensitivity);
         else if (gamepad2.left_trigger == 1)
             extensionPos = Constants.extendInPos;
 

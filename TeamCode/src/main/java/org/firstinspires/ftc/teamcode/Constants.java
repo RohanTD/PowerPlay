@@ -48,6 +48,7 @@ public class Constants {
 
     public static double extendOutPos = 0.55; // Servo position on the extension when the extension is out
     public static double extendInPos = 1.0; // Servo position on the extension when the extenion is in
+    public static double extendSensitivity = 0.03;
 
     public static Pose2d startPoseL = new Pose2d(-36, -63, Math.toRadians(180));
     public static Pose2d startPoseR = new Pose2d(36, -63, Math.toRadians(180));
