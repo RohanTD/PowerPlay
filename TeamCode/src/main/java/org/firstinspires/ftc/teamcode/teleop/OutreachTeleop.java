@@ -161,7 +161,7 @@ public class OutreachTeleop extends LinearOpMode {
         double turn = -gamepad1.right_stick_x;
 
         // only important numbers are here - default movement speed
-        double multiplier = 0.5;
+        double multiplier = 0.4;
         // curve to apply (squared rn)
         double power = 1.0;
 
@@ -176,6 +176,12 @@ public class OutreachTeleop extends LinearOpMode {
         y = Math.pow(y, power) * yMult;
         x = Math.pow(x, power) * xMult;
         turn = Math.pow(turn, power) * turnMult;
+
+        if (g2.b) {
+            y = 0;
+            x = 0;
+            turn = 0;
+        }
 
         drive.setWeightedDrivePower(new Pose2d(y, x, turn));
 
@@ -197,13 +203,13 @@ public class OutreachTeleop extends LinearOpMode {
 //        extend.setPosition((1 - extensionValue) * (Constants.extendInPos - Constants.extendOutPos) + Constants.extendOutPos);
 
         if (gamepad1.right_trigger <= 1)
-            extensionPos += (extensionRange * gamepad2.right_trigger * Constants.extendSensitivity);
+            extensionPos += (extensionRange * gamepad1.right_trigger * Constants.extendSensitivity);
 //        else if (gamepad2.right_trigger == 1)
 //            extensionPos = Constants.extendOutPos;
 
         if (gamepad1.left_trigger < 1)
-            extensionPos -= (extensionRange * gamepad2.left_trigger * Constants.extendSensitivity);
-        else if (gamepad2.left_trigger == 1)
+            extensionPos -= (extensionRange * gamepad1.left_trigger * Constants.extendSensitivity);
+        else if (gamepad1.left_trigger == 1)
             extensionPos = Constants.extendInPos;
 
         if (extensionPos < Constants.extendOutPos)
