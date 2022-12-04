@@ -11,8 +11,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-import java.util.*;
-
 @TeleOp(name = "Outreach Teleop", group = "TestBot")
 public class OutreachTeleop extends LinearOpMode {
     SampleMecanumDrive drive;
@@ -84,14 +82,14 @@ public class OutreachTeleop extends LinearOpMode {
 
         // if neither a nor y are pressed, the right joystick will be controlling lift
         if (!g2.dpad_down && !g2.dpad_up && !g2.a && !g2.y && !g2.dpad_left) {
-            if (g2.left_stick_y == 0 && Math.abs(liftR.getCurrentPosition()) >= Constants.liftError){
-                if (!isHolding){
-                    isHolding = true;
-                    holdPos = liftR.getCurrentPosition();
-                }
-                Constants.setLift(holdPos, Constants.liftPower);
-            }
-            else {
+//            if (g2.left_stick_y == 0 && Math.abs(liftR.getCurrentPosition()) >= Constants.liftError){
+//                if (!isHolding){
+//                    isHolding = true;
+//                    holdPos = liftR.getCurrentPosition();
+//                }
+//                Constants.setLift(holdPos, Constants.liftPower);
+//            }
+//            else {
                 liftL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 liftR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 liftT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -99,8 +97,8 @@ public class OutreachTeleop extends LinearOpMode {
                 double liftInput = Math.pow(gamepad2.left_stick_y, 2);
                 if (gamepad2.left_stick_y < 0) liftInput *= -1;
 
-                isHolding = false;
-                holdPos = 0;
+//                isHolding = false;
+//                holdPos = 0;
 
                 // opposite powers
                 if (liftR.getCurrentPosition() > Constants.liftLimit || gamepad2.left_stick_y < 0) {
@@ -108,7 +106,7 @@ public class OutreachTeleop extends LinearOpMode {
                     liftR.setPower(liftInput);
                     liftT.setPower(-liftInput);
                 }
-            }
+//            }
         }
 
         //Dpad right -> turret goes to 90 degrees (right)
@@ -168,10 +166,6 @@ public class OutreachTeleop extends LinearOpMode {
         double yMult = multiplier;
         double xMult = multiplier;
         double turnMult = multiplier;
-
-        if (y < 0) yMult *= -1;
-        if (x < 0) xMult *= -1;
-        if (turn < 0) turnMult *= -1;
 
         y = Math.pow(y, power) * yMult;
         x = Math.pow(x, power) * xMult;

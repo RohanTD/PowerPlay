@@ -11,8 +11,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-import java.util.*;
-
 @TeleOp(name = "PowerPlay First Bot", group = "TestBot")
 public class FirstBot extends LinearOpMode {
     SampleMecanumDrive drive;
@@ -83,32 +81,31 @@ public class FirstBot extends LinearOpMode {
         //When you hold d, the lift will stay up and will hold Aarav Mehta
 
         // if neither a nor y are pressed, the right joystick will be controlling lift
-        if (!g2.dpad_down && !g2.dpad_up && !g2.a && !g2.y && !g2.dpad_left) {
-            if (g2.left_stick_y == 0 && Math.abs(liftR.getCurrentPosition()) >= Constants.liftError){
-                if (!isHolding){
-                    isHolding = true;
-                    holdPos = liftR.getCurrentPosition();
-                }
-                Constants.setLift(holdPos, Constants.liftPower);
+        if (g2.dpad_left || Math.abs(g2.left_stick_x) > 0.2){
+            if (!isHolding){
+                isHolding = true;
+                holdPos = liftR.getCurrentPosition();
             }
-            else {
-                liftL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                liftR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                liftT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                // squared input
-                double liftInput = Math.pow(gamepad2.left_stick_y, 2);
-                if (gamepad2.left_stick_y < 0) liftInput *= -1;
+            Constants.setLift(holdPos, Constants.liftPower);
+        }
+        // if neither a nor y are pressed, the right joystick will be controlling lift
+        if (!g2.dpad_down && !g2.dpad_up && !g2.a && !g2.y && !g2.dpad_left && Math.abs(g2.left_stick_x) < 0.2) {
+            liftL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            liftR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            liftT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            // squared input
+            double liftInput = Math.pow(gamepad2.left_stick_y * Constants.liftPower, 2);
+            if (gamepad2.left_stick_y < 0) liftInput *= -1;
 
-                isHolding = false;
-                holdPos = 0;
+            isHolding = false;
+            holdPos = 0;
 
-                // opposite powers
-                if (liftR.getCurrentPosition() > Constants.liftLimit || gamepad2.left_stick_y < 0) {
-                    liftL.setPower(-liftInput);
-                    liftR.setPower(liftInput);
-                    liftT.setPower(-liftInput);
-                }
-            }
+            // opposite powers
+//            if (liftR.getCurrentPosition() > -4500 || gamepad2.left_stick_y < 0) {
+                liftL.setPower(-liftInput);
+                liftR.setPower(liftInput);
+                liftT.setPower(-liftInput);
+//            }
         }
 
         //Dpad right -> turret goes to 90 degrees (right)

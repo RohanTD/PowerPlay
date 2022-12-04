@@ -45,7 +45,7 @@ public class Constants {
     public static int turretTargetNeg90 = 750; // Encoder value for the turret at left 90 degree position
 
     public static double turretPower = 0.7; // Default turret power in auton and teleop automation
-    public static double liftPower = 1; // Default lift power in auton and teleop automation
+    public static double liftPower = 1.0; // Default lift power in auton and teleop automation
 
     public static double extendOutPos = 0.55; // Servo position on the extension when the extension is out
     public static double extendInPos = 1.0; // Servo position on the extension when the extenion is in
