@@ -101,11 +101,11 @@ public class FirstBot extends LinearOpMode {
             holdPos = 0;
 
             // opposite powers
-//            if (liftR.getCurrentPosition() > -4500 || gamepad2.left_stick_y < 0) {
+            if (liftR.getCurrentPosition() > Constants.liftLimit || gamepad2.left_stick_y < 0) {
                 liftL.setPower(-liftInput);
                 liftR.setPower(liftInput);
                 liftT.setPower(-liftInput);
-//            }
+            }
         }
 
         //Dpad right -> turret goes to 90 degrees (right)
@@ -208,7 +208,7 @@ public class FirstBot extends LinearOpMode {
 //            extensionPos = Constants.extendOutPos;
 
         if (gamepad2.left_trigger < 1)
-            extensionPos -= (extensionRange * gamepad2.left_trigger * Constants.extendSensitivity);
+            extensionPos -= (extensionRange * gamepad2.left_trigger * Constants.extendSensitivity / 2);
         else if (gamepad2.left_trigger == 1)
             extensionPos = Constants.extendInPos;
 

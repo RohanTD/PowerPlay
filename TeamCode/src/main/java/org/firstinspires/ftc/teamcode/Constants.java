@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.slf4j.Marker;
+
 public class Constants {
     public static DcMotor liftL;
     public static DcMotor liftR;
@@ -15,7 +17,7 @@ public class Constants {
 
     public static Servo clawL;
     public static Servo clawR;
-    public static Servo extend = null;
+    public static Servo extend;
 
     // Not used rn but jic
     public enum Color {
@@ -29,38 +31,58 @@ public class Constants {
         CLOSED
     }
 
+    public enum ExtendPosition{
+        OUT,
+        IN
+    }
+
     public static Color alliance;
 
     // Not used rn
     public static double waitTimeDrop = 0.75;
     public static double waitTimePickup = 0.75;
 
-    public static int liftTargetHigh = -4000; // Encoder value for the lift in up position
+    public static int liftTargetHigh = -2200; // Encoder value for the lift in up position
     public static int liftError = 50; // Amount of error allowed for lift positions (sbf as is)
     public static int turretError = 20; // ^
-    public static int liftLimit = -4500;
+    public static int liftLimit = -3200;
 
     public static int turretTarget90 = -740; // Encoder value for the turret at right 90 degree position
     public static int turretTarget180 = 1450; // Encoder value for the turret at back 180 degree position
     public static int turretTargetNeg90 = 750; // Encoder value for the turret at left 90 degree position
 
+    public static int coneStackHighPosition = -500;
+    public static int coneStackInterval = 100;
+
     public static double turretPower = 0.7; // Default turret power in auton and teleop automation
-    public static double liftPower = 1.0; // Default lift power in auton and teleop automation
+    public static double liftPower = 1; // Default lift power in auton and teleop automation
 
     public static double extendOutPos = 0.55; // Servo position on the extension when the extension is out
-    public static double extendInPos = 1.0; // Servo position on the extension when the extenion is in
+    public static double extendRightPos = 0.79;
+    public static double extendBackPos = 0.795;
+    public static double extendInPos = 1.0; // Servo position on the extension when the e1xtenion is in
     public static double extendSensitivity = 0.03;
 
-    public static Pose2d startPoseL = new Pose2d(-36, -63, Math.toRadians(180));
-    public static Pose2d startPoseR = new Pose2d(36, -63, Math.toRadians(180));
-    public static Pose2d pickupL = new Pose2d(-52, -12, Math.toRadians(180));
-    public static Pose2d mainDropL = new Pose2d(-42, -12, Math.toRadians(180));
+    public static Pose2d startPoseL = new Pose2d(-33, -62, Math.toRadians(180));
+    public static Pose2d startPoseR = new Pose2d(33, -63, Math.toRadians(180));
+    public static Pose2d pickupL = new Pose2d(-51.5, -12, Math.toRadians(180));
+    public static Pose2d mainDropL = new Pose2d(-24, -14, Math.toRadians(180));
+    public static Pose2d LSecond = new Pose2d(pickupL.getX() - 0.5, -12, Math.toRadians(180));
     public static Pose2d preCycleL = new Pose2d(-12, -12, Math.toRadians(180));
     public static Pose2d firstAdjustmentL = new Pose2d(-12, -60, Math.toRadians(180));
-    public static Pose2d firstDropL = new Pose2d(-12, -45, Math.toRadians(180));
+    public static Pose2d firstDropL = new Pose2d(-12, -24, Math.toRadians(180));
 
 
     public static Vector2d parkMiddleL = new Vector2d(-60, -12);
+
+    public static void setExtend(ExtendPosition position){
+        if (position == ExtendPosition.IN){
+            extend.setPosition(extendInPos);
+        }
+        else{
+            extend.setPosition(extendOutPos);
+        }
+    }
 
     public static MarkerCallback prepareArmB = () -> {
         setClaw(ClawPosition.CLOSED);
