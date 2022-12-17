@@ -8,7 +8,6 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -17,9 +16,8 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Disabled
-@Autonomous(name = "First Auton Left", group = "TestBot")
-public class FirstAutonLeft extends LinearOpMode {
+@Autonomous(name = "Full Auton Left", group = "TestBot")
+public class FullAutonLeft extends LinearOpMode {
     SampleMecanumDrive drive;
 
     DcMotor liftL;
@@ -62,10 +60,6 @@ public class FirstAutonLeft extends LinearOpMode {
 
         Constants.setClaw(Constants.ClawPosition.OPEN);
 
-//        extend.setPosition(Constants.extendOutPos);
-//        sleep(500);
-//        extend.setPosition(Constants.extendInPos);
-
         drive = new SampleMecanumDrive(hardwareMap);
 
         TrajectorySequence preload = drive.trajectorySequenceBuilder(startPose)
@@ -76,24 +70,14 @@ public class FirstAutonLeft extends LinearOpMode {
                     extend.setPosition(Constants.extendInPos);
                     Constants.setLift(Constants.liftTargetHigh, 0);
                 })
-                .addTemporalMarker(0.5,()->{
-                    Constants.setTurret(Constants.turretTargetNeg90,true,Constants.turretPower);
-                })
-                .addTemporalMarker(0.7, ()->{
+                .lineToLinearHeading(firstAdjustmentPose)
+                .UNSTABLE_addTemporalMarkerOffset(0.5,()->{
                     Constants.setLift(Constants.liftTargetHigh,Constants.liftPower);
                 })
-                .lineToLinearHeading(firstAdjustmentPose)
-                .addDisplacementMarker(()->{
-                    extend.setPosition(Constants.extendBackPos);
-                })
-                .UNSTABLE_addDisplacementMarkerOffset(3,()->{
-                    Constants.setTurret(Constants.turretTarget180,true,Constants.turretPower);
-                })
-                .lineToLinearHeading(firstDropPose)
-                .build();
-
-        TrajectorySequence cycleSetup = drive.trajectorySequenceBuilder(firstDropPose)
                 .lineToLinearHeading(preCyclePose)
+                .UNSTABLE_addTemporalMarkerOffset(0.2,()->{
+                        Constants.setTurret(Constants.turretTarget90,true,Constants.turretPower);
+                })
                 .lineToLinearHeading(mainDropPose)
                 .build();
 
@@ -114,9 +98,9 @@ public class FirstAutonLeft extends LinearOpMode {
             sleep(300);
             drive.followTrajectorySequence(preload);
 
+            extend.setPosition(Constants.extendRightPos);
+            sleep(300);
             Constants.dropAndReset();
-
-            drive.followTrajectorySequence(cycleSetup);
 
             runCycles(drive);
 

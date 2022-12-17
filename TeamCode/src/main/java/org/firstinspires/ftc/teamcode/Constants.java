@@ -25,6 +25,11 @@ public class Constants {
         BLUE
     }
 
+    public enum Side {
+        RIGHT,
+        LEFT
+    }
+
     // Instead of having to memorize the values this makes it easier
     public enum ClawPosition {
         OPEN,
@@ -37,40 +42,47 @@ public class Constants {
     }
 
     public static Color alliance;
+    public static Side side;
 
-    // Not used rn
-    public static double waitTimeDrop = 0.75;
-    public static double waitTimePickup = 0.75;
+    public static double offsetTimeDrop = 1.2;
+    public static double offsetTimePickup = 1.0;
 
-    public static int liftTargetHigh = -2200; // Encoder value for the lift in up position
+    public static int redThresh = 150;
+    public static int blueThresh = 150;
+    public static int purpleThresh = 150;
+
+    public static int regionX = 150;
+    public static int regionY = 90;
+
+    public static int liftTargetHigh = -2950; // Encoder value for the lift in up position
     public static int liftError = 50; // Amount of error allowed for lift positions (sbf as is)
     public static int turretError = 20; // ^
     public static int liftLimit = -3200;
 
-    public static int turretTarget90 = -740; // Encoder value for the turret at right 90 degree position
-    public static int turretTarget180 = 1450; // Encoder value for the turret at back 180 degree position
-    public static int turretTargetNeg90 = 750; // Encoder value for the turret at left 90 degree position
+    public static int turretTarget90 = -700; // Encoder value for the turret at right 90 degree position
+    public static int turretTarget180 = 1400; // Encoder value for the turret at back 180 degree position
+    public static int turretTargetNeg90 = 700; // Encoder value for the turret at left 90 degree position
 
     public static int coneStackHighPosition = -500;
     public static int coneStackInterval = 100;
 
-    public static double turretPower = 0.7; // Default turret power in auton and teleop automation
+    public static double turretPower = 1; // Default turret power in auton and teleop automation
     public static double liftPower = 1; // Default lift power in auton and teleop automation
 
     public static double extendOutPos = 0.55; // Servo position on the extension when the extension is out
-    public static double extendRightPos = 0.79;
-    public static double extendBackPos = 0.795;
+    public static double extendRightPos = 0.7875;
+    public static double extendBackPos = 0.765;
     public static double extendInPos = 1.0; // Servo position on the extension when the e1xtenion is in
     public static double extendSensitivity = 0.03;
 
     public static Pose2d startPoseL = new Pose2d(-33, -62, Math.toRadians(180));
     public static Pose2d startPoseR = new Pose2d(33, -63, Math.toRadians(180));
-    public static Pose2d pickupL = new Pose2d(-51.5, -12, Math.toRadians(180));
-    public static Pose2d mainDropL = new Pose2d(-24, -14, Math.toRadians(180));
+    public static Pose2d pickupL = new Pose2d(-51.65, -11.5, Math.toRadians(180));
+    public static Pose2d mainDropL = new Pose2d(-22.5, -13, Math.toRadians(180));
     public static Pose2d LSecond = new Pose2d(pickupL.getX() - 0.5, -12, Math.toRadians(180));
     public static Pose2d preCycleL = new Pose2d(-12, -12, Math.toRadians(180));
     public static Pose2d firstAdjustmentL = new Pose2d(-12, -60, Math.toRadians(180));
-    public static Pose2d firstDropL = new Pose2d(-12, -24, Math.toRadians(180));
+    public static Pose2d firstDropL = new Pose2d(-12, -23, Math.toRadians(180));
 
 
     public static Vector2d parkMiddleL = new Vector2d(-60, -12);
@@ -84,17 +96,41 @@ public class Constants {
         }
     }
 
-    public static MarkerCallback prepareArmB = () -> {
-        setClaw(ClawPosition.CLOSED);
-        setLift(liftTargetHigh, liftPower);
-        setTurret(180, false, turretPower);
-    };
+    public static void dropAndReset(){
+        Constants.setClaw(Constants.ClawPosition.OPEN);
+        Constants.sleepTime(100);
+        extend.setPosition(Constants.extendInPos);
+        Constants.sleepTime(150);
+        Constants.setLift(Constants.coneStackHighPosition,Constants.liftPower);
+        Constants.setTurret(0,true,Constants.turretPower);
 
-    public static MarkerCallback resetArm = () -> {
-        setClaw(ClawPosition.OPEN);
-        setLift(0,liftPower);
-        setTurret(0,false,turretPower);
-    };
+    }
+
+    public static void prepareDrop(){
+        sleepTime(200);
+        Constants.setLift(liftTargetHigh,Constants.liftPower);
+        Constants.sleepTime(200);
+        extend.setPosition(Constants.extendInPos);
+        Constants.sleepTime(500);
+
+        int turretTarget = turretTarget90;
+        if (side == Side.RIGHT)
+            turretTarget = turretTargetNeg90;
+        Constants.setTurret(turretTarget,true,Constants.turretPower);
+    }
+
+    public static void preparePickup(int currentCycleCounter){
+        extend.setPosition(Constants.extendOutPos);
+        Constants.setLift(Constants.coneStackHighPosition + (currentCycleCounter * Constants.coneStackInterval),Constants.liftPower);
+    }
+
+    public static void sleepTime(long millis){
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 
     public static void setLift(int value, double power) {
         // sets both lift motors to the value at the default power
