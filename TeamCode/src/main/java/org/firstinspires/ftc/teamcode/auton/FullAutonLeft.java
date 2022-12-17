@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.auton;
 
+import static org.firstinspires.ftc.teamcode.Constants.cutAcrossL;
 import static org.firstinspires.ftc.teamcode.Constants.extend;
 import static org.firstinspires.ftc.teamcode.Constants.extendOutPos;
 
@@ -38,6 +39,7 @@ public class FullAutonLeft extends LinearOpMode {
     Vector2d parkMiddlePose = Constants.parkMiddleL;
 
     int numCycles = 5;
+    double liftStartTime = 1.3;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -70,14 +72,14 @@ public class FullAutonLeft extends LinearOpMode {
                     extend.setPosition(Constants.extendInPos);
                     Constants.setLift(Constants.liftTargetHigh, 0);
                 })
-                .lineToLinearHeading(firstAdjustmentPose)
-                .UNSTABLE_addTemporalMarkerOffset(0.5,()->{
+                .addTemporalMarker(liftStartTime,()->{
                     Constants.setLift(Constants.liftTargetHigh,Constants.liftPower);
                 })
-                .lineToLinearHeading(preCyclePose)
-                .UNSTABLE_addTemporalMarkerOffset(0.2,()->{
+                .addTemporalMarker(liftStartTime + 0.7,()->{
                         Constants.setTurret(Constants.turretTarget90,true,Constants.turretPower);
                 })
+                .lineToLinearHeading(Constants.pushOutL)
+                .lineToLinearHeading(cutAcrossL)
                 .lineToLinearHeading(mainDropPose)
                 .build();
 

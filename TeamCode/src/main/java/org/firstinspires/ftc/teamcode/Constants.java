@@ -79,6 +79,8 @@ public class Constants {
     public static Pose2d startPoseR = new Pose2d(33, -63, Math.toRadians(180));
     public static Pose2d pickupL = new Pose2d(-51.65, -11.5, Math.toRadians(180));
     public static Pose2d mainDropL = new Pose2d(-22.5, -13, Math.toRadians(180));
+    public static Pose2d pushOutL = new Pose2d(-33,-9,Math.toRadians(180));
+    public static Pose2d cutAcrossL = new Pose2d(-33, -12, Math.toRadians(180));
     public static Pose2d LSecond = new Pose2d(pickupL.getX() - 0.5, -12, Math.toRadians(180));
     public static Pose2d preCycleL = new Pose2d(-12, -12, Math.toRadians(180));
     public static Pose2d firstAdjustmentL = new Pose2d(-12, -60, Math.toRadians(180));
