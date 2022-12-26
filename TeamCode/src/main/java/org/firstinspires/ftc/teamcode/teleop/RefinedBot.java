@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@TeleOp(name = "PowerPlay First Bot", group = "TestBot")
+@TeleOp(name = "Refined Bot", group = "TestBot")
 public class RefinedBot extends LinearOpMode {
     SampleMecanumDrive drive;
 
