@@ -19,8 +19,7 @@ public class OutreachTeleop extends LinearOpMode {
     DcMotor liftR = null;
     DcMotor liftT = null;
 
-    Servo clawL = null;
-    Servo clawR = null;
+    Servo claw = null;
     Servo extend = null;
 
     DcMotor turretR = null;
@@ -49,12 +48,11 @@ public class OutreachTeleop extends LinearOpMode {
         liftR = Constants.liftR;
         liftT = Constants.liftT;
 
-        clawL = Constants.clawL; //Left and right servos on claws Aarav Mehta
-        clawR = Constants.clawR;
+        claw = Constants.claw;
 
         extend = Constants.extend;
 
-        turretR = Constants.turretR;
+        turretR = Constants.turret;
 
         drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.auton;
 
+import static org.firstinspires.ftc.teamcode.Constants.altDropL;
+import static org.firstinspires.ftc.teamcode.Constants.collectPreload;
+import static org.firstinspires.ftc.teamcode.Constants.cutAcrossL;
 import static org.firstinspires.ftc.teamcode.Constants.extend;
 import static org.firstinspires.ftc.teamcode.Constants.extendOutPos;
 
@@ -8,7 +11,6 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -17,17 +19,17 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Disabled
-@Autonomous(name = "First Auton Left", group = "TestBot")
-public class FirstAutonLeft extends LinearOpMode {
+@Autonomous(name = "Tilt Auton Left", group = "TestBot")
+public class TiltAutonLeft extends LinearOpMode {
     SampleMecanumDrive drive;
 
     DcMotor liftL;
     DcMotor liftR;
-    DcMotor turretR;
+    DcMotor turret;
 
     Servo claw;
     Servo extend;
+    Servo tilt;
 
     Pose2d startPose = Constants.startPoseL;
     Pose2d pickupPose = Constants.pickupL;
@@ -36,9 +38,10 @@ public class FirstAutonLeft extends LinearOpMode {
     Pose2d firstAdjustmentPose = Constants.firstAdjustmentL;
     Pose2d firstDropPose = Constants.firstDropL;
 
-    Vector2d parkMiddlePose = Constants.parkLeftL;
+    Vector2d parkLeftPose = Constants.parkLeftL;
 
     int numCycles = 5;
+    double liftStartTime = 1.3;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -52,17 +55,14 @@ public class FirstAutonLeft extends LinearOpMode {
         liftL = Constants.liftL;
         liftR = Constants.liftR;
 
-        turretR = Constants.turret;
+        turret = Constants.turret;
 
         claw = Constants.claw;
-
         extend = Constants.extend;
+        tilt = Constants.tilt;
 
         Constants.setClaw(Constants.ClawPosition.OPEN);
-
-//        extend.setPosition(Constants.extendOutPos);
-//        sleep(500);
-//        extend.setPosition(Constants.extendInPos);
+        tilt.setPosition(Constants.tiltUpPosition);
 
         drive = new SampleMecanumDrive(hardwareMap);
 
@@ -74,29 +74,19 @@ public class FirstAutonLeft extends LinearOpMode {
                     extend.setPosition(Constants.extendInPos);
                     Constants.setLift(Constants.liftTargetHigh, 0);
                 })
-                .addTemporalMarker(0.5,()->{
-                    Constants.setTurret(Constants.turretTargetNeg90,true,Constants.turretPower);
+                .addTemporalMarker(0.6,()->{
+                    Constants.setTurret(Constants.turretTargetAutonL,true,Constants.turretPower);
                 })
-                .addTemporalMarker(0.7, ()->{
+                .addTemporalMarker(2.0,()->{
                     Constants.setLift(Constants.liftTargetHigh,Constants.liftPower);
                 })
-                .lineToLinearHeading(firstAdjustmentPose)
-                .addDisplacementMarker(()->{
-                    extend.setPosition(Constants.extendBackPos);
-                })
-                .UNSTABLE_addDisplacementMarkerOffset(3,()->{
-                    Constants.setTurret(Constants.turretTarget180,true,Constants.turretPower);
-                })
-                .lineToLinearHeading(firstDropPose)
-                .build();
-
-        TrajectorySequence cycleSetup = drive.trajectorySequenceBuilder(firstDropPose)
-                .lineToLinearHeading(preCyclePose)
-                .lineToLinearHeading(mainDropPose)
+                .lineToLinearHeading(Constants.pushOutL)
+                .lineToLinearHeading(cutAcrossL)
+                .lineToLinearHeading(Constants.altDropL)
                 .build();
 
         TrajectorySequence parkMiddle = drive.trajectorySequenceBuilder(mainDropPose)
-                .lineTo(parkMiddlePose)
+                .lineTo(parkLeftPose)
                 .build();
 
         waitForStart();
@@ -106,20 +96,13 @@ public class FirstAutonLeft extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             drive.setPoseEstimate(startPose);
 
-            extend.setPosition(0.9);
-            sleep(200);
-            Constants.setClaw(Constants.ClawPosition.CLOSED);
-            sleep(300);
+            Constants.collectPreload();
             drive.followTrajectorySequence(preload);
-
-            Constants.dropAndReset();
-
-            drive.followTrajectorySequence(cycleSetup);
+            Constants.tiltDrop();
 
             runCycles(drive);
 
             drive.followTrajectorySequence(parkMiddle);
-
             break;
         }
     }
@@ -128,46 +111,33 @@ public class FirstAutonLeft extends LinearOpMode {
         int cycleCounter = 0;
         while (cycleCounter < numCycles && opModeIsActive()){
             int currentCycleCounter = cycleCounter;
-            TrajectorySequence cycle = drive.trajectorySequenceBuilder(mainDropPose)
+            TrajectorySequence cycle = drive.trajectorySequenceBuilder(altDropL)
                     .lineToLinearHeading(pickupPose)
                     .addTemporalMarker(Constants.offsetTimePickup, ()->{
-                        Constants.setClaw(Constants.ClawPosition.CLOSED);
+                        extend.setPosition(Constants.extendOutPos);
                     })
                     .build();
 
             TrajectorySequence finishCycle = drive.trajectorySequenceBuilder(pickupPose)
-                    .lineToLinearHeading(new Pose2d(mainDropPose.getX() /*+ (currentCycleCounter - 2) * 0.5*/, mainDropPose.getY(), mainDropPose.getHeading()))
-                    .addTemporalMarker(0.2,()->{
-                        Constants.setLift(Constants.liftTargetHigh,Constants.liftPower);
-                    })
-                    .addTemporalMarker(1.0,()->{
-                        int turretTarget = Constants.turretTarget90;
-                        if (Constants.side == Constants.Side.RIGHT)
-                            turretTarget = Constants.turretTargetNeg90;
-                        Constants.setTurret(turretTarget,true,Constants.turretPower);
-
-                    })
-                    .addTemporalMarker(1.4, ()->{
-                        extend.setPosition(Constants.extendRightPos);
-                    })
+                    .lineToLinearHeading(altDropL)
                     .build();
 
-            extend.setPosition(Constants.extendOutPos);
             Constants.setLift(Constants.coneStackHighPosition + (currentCycleCounter * Constants.coneStackInterval),Constants.liftPower);
 
             drive.followTrajectorySequence(cycle);
             Constants.setClaw(Constants.ClawPosition.CLOSED);
-//            Constants.sleepTime(100);
+            Constants.sleepTime(300);
             Constants.setLift(Constants.liftTargetHigh,Constants.liftPower);
             Constants.sleepTime(200);
             extend.setPosition(Constants.extendInPos);
             Constants.setLift(Constants.liftTargetHigh,0);
 
+            Constants.setTurret(Constants.turretTargetAutonL,true,Constants.turretPower);
             drive.followTrajectorySequence(finishCycle);
-            extend.setPosition(Constants.extendRightPos);
-            sleep(150);
-            Constants.dropAndReset();
-            sleep(150);
+            Constants.setLift(Constants.liftTargetHigh,Constants.liftPower);
+            sleep(700);
+            Constants.tiltDrop();
+            sleep(200);
 
             cycleCounter++;
         }

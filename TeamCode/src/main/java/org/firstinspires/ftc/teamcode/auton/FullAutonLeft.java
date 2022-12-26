@@ -17,17 +17,17 @@ import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
-@Autonomous(name = "Full Auton Left", group = "TestBot")
+@Autonomous(name = "No Tilt Left", group = "TestBot")
 public class FullAutonLeft extends LinearOpMode {
     SampleMecanumDrive drive;
 
     DcMotor liftL;
     DcMotor liftR;
-    DcMotor turretR;
+    DcMotor turret;
 
-    Servo clawL;
-    Servo clawR;
+    Servo claw;
     Servo extend;
+    Servo tilt;
 
     Pose2d startPose = Constants.startPoseL;
     Pose2d pickupPose = Constants.pickupL;
@@ -36,7 +36,7 @@ public class FullAutonLeft extends LinearOpMode {
     Pose2d firstAdjustmentPose = Constants.firstAdjustmentL;
     Pose2d firstDropPose = Constants.firstDropL;
 
-    Vector2d parkMiddlePose = Constants.parkMiddleL;
+    Vector2d parkMiddlePose = Constants.parkLeftL;
 
     int numCycles = 5;
     double liftStartTime = 1.3;
@@ -53,14 +53,14 @@ public class FullAutonLeft extends LinearOpMode {
         liftL = Constants.liftL;
         liftR = Constants.liftR;
 
-        turretR = Constants.turretR;
+        turret = Constants.turret;
 
-        clawL = Constants.clawL;
-        clawR = Constants.clawR;
-
+        claw = Constants.claw;
         extend = Constants.extend;
+        tilt = Constants.tilt;
 
         Constants.setClaw(Constants.ClawPosition.OPEN);
+        tilt.setPosition(Constants.tiltUpPosition);
 
         drive = new SampleMecanumDrive(hardwareMap);
 
