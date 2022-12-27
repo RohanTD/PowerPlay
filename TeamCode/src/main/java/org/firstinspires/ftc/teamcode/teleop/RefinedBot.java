@@ -35,7 +35,7 @@ public class RefinedBot extends LinearOpMode {
     long timerStart = System.currentTimeMillis();
 
     boolean isHolding = false;
-    boolean isOpen = false;
+    boolean isOpen = true;
     boolean isMoving = false;
 
     int holdPos = 0;
