@@ -167,9 +167,9 @@ public class RefinedBot extends LinearOpMode {
     }
 
     public void armCode(){
-        extensionPos += square(g2.right_stick_x) * Constants.extendSensitivity;
+        extensionPos += square(g2.right_stick_y) * Constants.extendSensitivity;
 
-        if (gamepad2.right_stick_x == -1)
+        if (gamepad2.right_stick_y == -1)
             extensionPos = Constants.extendInPos;
 
         if (extensionPos < Constants.extendOutPos)
@@ -181,7 +181,7 @@ public class RefinedBot extends LinearOpMode {
             extensionPos = Constants.extendInPos;
 
 
-        tiltPos += square(g2.right_stick_y) * Constants.tiltSensitivity;
+        tiltPos += square(g2.right_stick_x) * Constants.tiltSensitivity;
 
         if (tiltPos > Constants.tiltUpPosition)
             tiltPos = Constants.tiltUpPosition;
