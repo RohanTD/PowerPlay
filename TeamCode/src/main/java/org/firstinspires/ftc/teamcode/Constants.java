@@ -91,13 +91,6 @@ public class Constants {
 
     public static Vector2d parkLeftL = new Vector2d(-60, -12);
 
-    public static void collectPreload(){
-        tilt.setPosition(Constants.tiltDownPosition);
-        Constants.sleepTime(200);
-        Constants.setClaw(Constants.ClawPosition.CLOSED);
-        Constants.sleepTime(200);
-    }
-
     public static void dropAndReset(){
         Constants.setClaw(Constants.ClawPosition.OPEN);
         Constants.sleepTime(100);

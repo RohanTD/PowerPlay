@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.auton;
 
 import static org.firstinspires.ftc.teamcode.Constants.altDropL;
-import static org.firstinspires.ftc.teamcode.Constants.collectPreload;
 import static org.firstinspires.ftc.teamcode.Constants.cutAcrossL;
 import static org.firstinspires.ftc.teamcode.Constants.extend;
 import static org.firstinspires.ftc.teamcode.Constants.extendOutPos;
@@ -61,7 +60,7 @@ public class TiltAutonLeft extends LinearOpMode {
         extend = Constants.extend;
         tilt = Constants.tilt;
 
-        Constants.setClaw(Constants.ClawPosition.OPEN);
+        Constants.setClaw(Constants.ClawPosition.CLOSED);
         tilt.setPosition(Constants.tiltUpPosition);
 
         drive = new SampleMecanumDrive(hardwareMap);
@@ -73,6 +72,7 @@ public class TiltAutonLeft extends LinearOpMode {
                 .addTemporalMarker(0.4, ()->{
                     extend.setPosition(Constants.extendInPos);
                     Constants.setLift(Constants.liftTargetHigh, 0);
+                    tilt.setPosition(Constants.tiltDropPosition);
                 })
                 .addTemporalMarker(0.6,()->{
                     Constants.setTurret(Constants.turretTargetAutonL,true,Constants.turretPower);
@@ -96,7 +96,6 @@ public class TiltAutonLeft extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             drive.setPoseEstimate(startPose);
 
-            Constants.collectPreload();
             drive.followTrajectorySequence(preload);
             Constants.tiltDrop();
 
@@ -131,7 +130,7 @@ public class TiltAutonLeft extends LinearOpMode {
             Constants.sleepTime(200);
             extend.setPosition(Constants.extendInPos);
             Constants.setLift(Constants.liftTargetHigh,0);
-
+            sleep(200);
             Constants.setTurret(Constants.turretTargetAutonL,true,Constants.turretPower);
             drive.followTrajectorySequence(finishCycle);
             Constants.setLift(Constants.liftTargetHigh,Constants.liftPower);
