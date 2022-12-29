@@ -113,30 +113,35 @@ public class TiltAutonLeft extends LinearOpMode {
             TrajectorySequence cycle = drive.trajectorySequenceBuilder(altDropL)
                     .lineToLinearHeading(pickupPose)
                     .addTemporalMarker(Constants.offsetTimePickup, ()->{
-                        extend.setPosition(Constants.extendOutPos);
+//                        extend.setPosition(Constants.extendOutPos);
                     })
                     .build();
 
             TrajectorySequence finishCycle = drive.trajectorySequenceBuilder(pickupPose)
                     .lineToLinearHeading(altDropL)
+                    .addTemporalMarker(0.4,()->{
+                        Constants.setLift(Constants.liftTargetHigh,Constants.liftPower);
+                    })
+
                     .build();
 
             Constants.setLift(Constants.coneStackHighPosition + (currentCycleCounter * Constants.coneStackInterval),Constants.liftPower);
 
             drive.followTrajectorySequence(cycle);
+            extend.setPosition(Constants.extendOutPos);
+            sleep(400);
             Constants.setClaw(Constants.ClawPosition.CLOSED);
             Constants.sleepTime(300);
             Constants.setLift(Constants.liftTargetHigh,Constants.liftPower);
             Constants.sleepTime(200);
             extend.setPosition(Constants.extendInPos);
+            sleep(100);
             Constants.setLift(Constants.liftTargetHigh,0);
             sleep(200);
             Constants.setTurret(Constants.turretTargetAutonL,true,Constants.turretPower);
             drive.followTrajectorySequence(finishCycle);
-            Constants.setLift(Constants.liftTargetHigh,Constants.liftPower);
-            sleep(700);
+            sleep(300);
             Constants.tiltDrop();
-            sleep(200);
 
             cycleCounter++;
         }

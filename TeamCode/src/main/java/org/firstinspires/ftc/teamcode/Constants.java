@@ -42,7 +42,7 @@ public class Constants {
     public static Side side;
 
     public static double offsetTimeDrop = 1.0;
-    public static double offsetTimePickup = 1.0;
+    public static double offsetTimePickup = 0.3;
 
     public static int redThresh = 150;
     public static int blueThresh = 150;
@@ -51,7 +51,7 @@ public class Constants {
     public static int regionX = 150;
     public static int regionY = 90;
 
-    public static int liftTargetHigh = -2700; // Encoder value for the lift in up position
+    public static int liftTargetHigh = -2400; // Encoder value for the lift in up position
     public static int liftError = 20; // Amount of error allowed for lift positions (sbf as is)
     public static int turretError = 20; // ^
     public static int liftLimit = -3200;
@@ -59,30 +59,30 @@ public class Constants {
     public static int turretTarget90 = -700; // Encoder value for the turret at right 90 degree position
     public static int turretTarget180 = 1400; // Encoder value for the turret at back 180 degree position
     public static int turretTargetNeg90 = 700; // Encoder value for the turret at left 90 degree position
-    public static int turretTargetAutonL = -1000;
+    public static int turretTargetAutonL = -1055;
 
     public static int coneStackHighPosition = -500;
     public static int coneStackInterval = 100;
 
-    public static double turretPower = 1; // Default turret power in auton and teleop automation
+    public static double turretPower = 0.85; // Default turret power in auton and teleop automation
     public static double liftPower = 1; // Default lift power in auton and teleop automation
 
-    public static double extendOutPos = 0.55; // Servo position on the extension when the extension is out
+    public static double extendOutPos = 0.47; // Servo position on the extension when the extension is out
     public static double extendRightPos = 0.7875;
     public static double extendBackPos = 0.765;
-    public static double extendInPos = 1.0; // Servo position on the extension when the e1xtenion is in
-    public static double extendSensitivity = 0.03;
+    public static double extendInPos = 0.94 ; // Servo position on the extension when the e1xtenion is in
+    public static double extendSensitivity = 0.01;
 
-    public static double tiltUpPosition = 0.5;
-    public static double tiltDownPosition = 0.1;
-    public static double tiltDropPosition = 0.3;
-    public static double tiltSensitivity = 0.01;
+    public static double tiltUpPosition = 1;
+    public static double tiltDownPosition = 0.4;
+    public static double tiltDropPosition = 0.6;
+    public static double tiltSensitivity = 0.005;
 
     public static Pose2d startPoseL = new Pose2d(-33, -62, Math.toRadians(180));
     public static Pose2d startPoseR = new Pose2d(33, -63, Math.toRadians(180));
-    public static Pose2d pickupL = new Pose2d(-52, -11.5, Math.toRadians(180));
+    public static Pose2d pickupL = new Pose2d(-52.5, -11.5, Math.toRadians(180));
     public static Pose2d mainDropL = new Pose2d(-22.5, -13, Math.toRadians(180));
-    public static Pose2d altDropL = new Pose2d(-40, -11.5,Math.toRadians(180));
+    public static Pose2d altDropL = new Pose2d(-36, -11.5,Math.toRadians(180));
     public static Pose2d pushOutL = new Pose2d(-36,-9,Math.toRadians(180));
     public static Pose2d cutAcrossL = new Pose2d(-36, -12, Math.toRadians(180));
     public static Pose2d preCycleL = new Pose2d(-12, -12, Math.toRadians(180));
@@ -103,15 +103,17 @@ public class Constants {
     public static void tiltDrop(){
         tilt.setPosition(Constants.tiltDropPosition);
         extend.setPosition(Constants.extendOutPos);
-        Constants.sleepTime(300);
+        Constants.sleepTime(500);
         tilt.setPosition(Constants.tiltDownPosition);
         Constants.sleepTime(100);
         Constants.setClaw(Constants.ClawPosition.OPEN);
         Constants.sleepTime(100);
         extend.setPosition(Constants.extendInPos);
-        Constants.sleepTime(200);
-        Constants.setLift(Constants.coneStackHighPosition,Constants.liftPower);
+        Constants.sleepTime(300);
+        Constants.setLift(Constants.liftTargetHigh - 200,Constants.liftPower);
         Constants.setTurret(0,true,Constants.turretPower);
+        Constants.sleepTime(200);
+        Constants.setLift(0,Constants.liftPower);
     }
 
     public static void sleepTime(long millis){
@@ -167,9 +169,9 @@ public class Constants {
 
     public static void setClaw(ClawPosition position) {
         if (position == ClawPosition.CLOSED) {
-            claw.setPosition(0);
+            claw.setPosition(1);
         } else {
-            claw.setPosition(0.4);
+            claw.setPosition(0.5);
         }
     }
 
