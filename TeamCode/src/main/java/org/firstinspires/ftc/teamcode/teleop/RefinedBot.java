@@ -77,17 +77,13 @@ public class RefinedBot extends LinearOpMode {
     }
 
     public void liftAuto(){
-        // when you hold y, the lift will move upward until it hits the target position (liftTargetHigh)
         if ((g2.dpad_up || g2.y) && Math.abs(liftR.getCurrentPosition() - Constants.liftTargetHigh) >= Constants.liftError) {
-            Constants.setLift(Constants.liftTargetHigh, Constants.liftPower); // you can see this method in Constants
+            Constants.setLift(Constants.liftTargetHigh, Constants.liftPower);
         }
-        // when you hold a, the lift will move downward until it gets down to 0
         if ((g2.dpad_down || g2.a) && Math.abs(liftR.getCurrentPosition()) >= Constants.liftError) {
             Constants.setLift(0, Constants.liftPower);
         }
-        //When you hold d, the lift will stay up and will hold Aarav Mehta
 
-        // if neither a nor y are pressed, the right joystick will be controlling lift
         if (g2.dpad_left || Math.abs(g2.left_stick_x) > 0.2){
             if (!isHolding){
                 isHolding = true;
@@ -95,18 +91,16 @@ public class RefinedBot extends LinearOpMode {
             }
             Constants.setLift(holdPos, Constants.liftPower);
         }
-        // if neither a nor y are pressed, the right joystick will be controlling lift
         if (!g2.dpad_down && !g2.dpad_up && !g2.a && !g2.y && !g2.dpad_left && Math.abs(g2.left_stick_x) <= 0.2) {
             liftL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             liftR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             liftT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            // squared input
+
             double liftInput = square(gamepad2.left_stick_y) * Constants.liftPower;
 
             isHolding = false;
             holdPos = 0;
 
-            // opposite powers
             if (liftR.getCurrentPosition() > Constants.liftLimit || gamepad2.left_stick_y < 0) {
                 liftL.setPower(-liftInput);
                 liftR.setPower(liftInput);
@@ -116,27 +110,21 @@ public class RefinedBot extends LinearOpMode {
     }
 
     public void turretAuto(){
-        //Dpad right -> turret goes to 90 degrees (right)
         if (g2.b && Math.abs(turret.getCurrentPosition() - Constants.turretTarget90) >= Constants.turretError) {
             Constants.setTurret(90, false, Constants.turretPower); // look at this method in Constants
         }
-        //Dpad left -> turret goes to -90 degrees (left)
         else if (g2.x && Math.abs(turret.getCurrentPosition() - Constants.turretTargetNeg90) >= Constants.turretError) {
             Constants.setTurret(-90, false, Constants.turretPower);
         }
-        //Dpad down -> turret goes to 180 degrees (backward)
         else if (g2.y && Math.abs(turret.getCurrentPosition() - Constants.turretTarget180) >= Constants.turretError) {
             Constants.setTurret(180, false, Constants.turretPower);
         }
-        //Dpad up -> turret goes to 0 degrees (forward)
         else if (g2.a && Math.abs(turret.getCurrentPosition()) >= Constants.turretError) {
             Constants.setTurret(0, false, Constants.turretPower);
         }
-        //If no dpads are pressed, left joystick will control turret
         else if (!g2.x && !g2.a && !g2.y && !g2.b) {
             turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            // squared input, 0.5 speed
-//            double turretInput = -Math.pow(gamepad2.right_stick_x, 2) * Constants.turretPower;
+
             double turretMultiplier = 0.7;
 
             double triggerDiff = g2.right_trigger - g2.left_trigger;
@@ -150,7 +138,6 @@ public class RefinedBot extends LinearOpMode {
         liftAuto();
         turretAuto();
 
-        // press dpad right -> resets all encoders
         if (g2.dpad_right) {
             liftL.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             liftL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -227,16 +214,12 @@ public class RefinedBot extends LinearOpMode {
         double x = -gamepad1.left_stick_x;
         double turn = -gamepad1.right_stick_x;
 
-        // only important numbers are here - default movement speed
         double multiplier = 0.75;
-        // curve to apply (squared rn)
         double power = 2.0;
 
-        // slow mode = right trigger
         if (g1.right_bumper) {
             multiplier = 0.3;
         }
-        // fast mode = left trigger
         if (g1.left_bumper) {
             multiplier = 1;
         }

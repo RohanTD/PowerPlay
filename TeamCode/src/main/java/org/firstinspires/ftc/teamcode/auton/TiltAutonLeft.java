@@ -85,7 +85,7 @@ public class TiltAutonLeft extends LinearOpMode {
                 .lineToLinearHeading(Constants.altDropL)
                 .build();
 
-        TrajectorySequence parkMiddle = drive.trajectorySequenceBuilder(mainDropPose)
+        TrajectorySequence parkLeft = drive.trajectorySequenceBuilder(mainDropPose)
                 .lineTo(parkLeftPose)
                 .build();
 
@@ -101,7 +101,7 @@ public class TiltAutonLeft extends LinearOpMode {
 
             runCycles(drive);
 
-            drive.followTrajectorySequence(parkMiddle);
+            drive.followTrajectorySequence(parkLeft);
             break;
         }
     }
