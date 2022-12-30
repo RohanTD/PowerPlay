@@ -39,6 +39,8 @@ public class RefinedBot extends LinearOpMode {
     boolean isOpen = true;
     boolean isMoving = false;
     boolean hasPressed = false;
+    boolean hasPulled = false;
+    boolean hasTilted = false;
 
     int holdPos = 0;
 
@@ -168,8 +170,18 @@ public class RefinedBot extends LinearOpMode {
         if (g2.right_stick_button)
             extensionPos = Constants.extendInPos;
 
-        if (g2.dpad_up || g2.dpad_down || turret.getPower() > 0.4)
+        if (g2.dpad_down) {
             extensionPos = Constants.extendInPos - 0.2;
+            hasPulled = false;
+        }
+
+        if (g2.dpad_up && !hasPulled) {
+            extensionPos = Constants.extendInPos;
+            hasPulled = true;
+        }
+
+        if (turret.getPower() > 0.25)
+            extensionPos = Constants.extendInPos;
 
 
         tiltPos += -(g2.right_stick_y) * Constants.tiltSensitivity;
@@ -177,21 +189,32 @@ public class RefinedBot extends LinearOpMode {
         if (tiltPos > Constants.tiltUpPosition)
             tiltPos = Constants.tiltUpPosition;
 
-        if (g2.dpad_up)
+        if (g2.dpad_up && !hasTilted) {
             tiltPos = Constants.tiltDropPosition;
-        if (g2.dpad_down)
+            hasTilted = true;
+        }
+        if (g2.dpad_down && Math.abs(turret.getCurrentPosition()) >= Constants.turretError) {
+            tiltPos = Constants.tiltUpPosition;
+            hasTilted = false;
+        }
+        else if (g2.dpad_down) {
             tiltPos = Constants.tiltDownPosition;
+            hasTilted = false;
+        }
 
         if (g2.y)
             tiltPos = Constants.tiltUpPosition;
         if (g2.x)
             tiltPos = Constants.tiltDropPosition;
-        if (g2.a)
+        if (g2.a) {
             tiltPos = Constants.tiltDownPosition;
+            hasTilted = false;
+        }
 
 
         if (gamepad2.left_bumper) {
             tiltPos = Constants.tiltDownPosition;
+            hasTilted = false;
             if (!isMoving) {
                 timerStart = System.currentTimeMillis();
                 isMoving = true;
