@@ -109,11 +109,11 @@ public class Constants {
         Constants.setClaw(Constants.ClawPosition.OPEN);
         Constants.sleepTime(100);
         extend.setPosition(Constants.extendInPos);
-        Constants.sleepTime(300);
         Constants.setLift(Constants.liftTargetHigh - 200,Constants.liftPower);
+        Constants.sleepTime(300);
         Constants.setTurret(0,true,Constants.turretPower);
+        Constants.setLift(Constants.coneStackHighPosition,Constants.liftPower);
         Constants.sleepTime(200);
-        Constants.setLift(0,Constants.liftPower);
     }
 
     public static void sleepTime(long millis){
