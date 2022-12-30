@@ -52,6 +52,8 @@ public class Constants {
     public static int regionY = 90;
 
     public static int liftTargetHigh = -2400; // Encoder value for the lift in up position
+    public static int liftTargetMid = -1650;
+    public static int liftTargetLow = -900;
     public static int liftError = 20; // Amount of error allowed for lift positions (sbf as is)
     public static int turretError = 20; // ^
     public static int liftLimit = -3200;
@@ -103,13 +105,13 @@ public class Constants {
     public static void tiltDrop(){
         tilt.setPosition(Constants.tiltDropPosition);
         extend.setPosition(Constants.extendOutPos);
-        Constants.sleepTime(500);
+        Constants.sleepTime(400);
         tilt.setPosition(Constants.tiltDownPosition);
         Constants.sleepTime(100);
         Constants.setClaw(Constants.ClawPosition.OPEN);
         Constants.sleepTime(100);
         extend.setPosition(Constants.extendInPos);
-        Constants.setLift(Constants.liftTargetHigh - 200,Constants.liftPower);
+        Constants.setLift(Constants.liftTargetHigh - 400,Constants.liftPower);
         Constants.sleepTime(300);
         Constants.setTurret(0,true,Constants.turretPower);
         Constants.setLift(Constants.coneStackHighPosition,Constants.liftPower);

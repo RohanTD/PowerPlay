@@ -84,6 +84,12 @@ public class RefinedBot extends LinearOpMode {
         if ((g2.dpad_up) && Math.abs(liftR.getCurrentPosition() - Constants.liftTargetHigh) >= Constants.liftError) {
             Constants.setLift(Constants.liftTargetHigh, Constants.liftPower);
         }
+        if ((g2.dpad_left) && Math.abs(liftR.getCurrentPosition() - Constants.liftTargetMid) >= Constants.liftError) {
+            Constants.setLift(Constants.liftTargetMid, Constants.liftPower);
+        }
+        if ((g2.dpad_right) && Math.abs(liftR.getCurrentPosition() - Constants.liftTargetLow) >= Constants.liftError) {
+            Constants.setLift(Constants.liftTargetLow, Constants.liftPower);
+        }
         if ((g2.dpad_down) && Math.abs(liftR.getCurrentPosition()) >= Constants.liftError) {
             Constants.setLift(0, Constants.liftPower);
         }
@@ -95,7 +101,7 @@ public class RefinedBot extends LinearOpMode {
             }
             Constants.setLift(holdPos, Constants.liftPower);
         }
-        if (!g2.dpad_down && !g2.dpad_up && Math.abs(g2.left_stick_x) <= 0.2) {
+        if (!g2.dpad_down && !g2.dpad_up && !g2.dpad_right && !g2.dpad_left && Math.abs(g2.left_stick_x) <= 0.2) {
             liftL.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             liftR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             liftT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -114,22 +120,13 @@ public class RefinedBot extends LinearOpMode {
     }
 
     public void turretAuto(){
-//        if (g2.b && Math.abs(turret.getCurrentPosition() - Constants.turretTarget90) >= Constants.turretError) {
-//            Constants.setTurret(90, false, Constants.turretPower); // look at this method in Constants
-//        }
-//        else if (g2.x && Math.abs(turret.getCurrentPosition() - Constants.turretTargetNeg90) >= Constants.turretError) {
-//            Constants.setTurret(-90, false, Constants.turretPower);
-//        }
-//        else if (g2.y && Math.abs(turret.getCurrentPosition() - Constants.turretTarget180) >= Constants.turretError) {
-//            Constants.setTurret(180, false, Constants.turretPower);
-//        }
         if (g2.dpad_down && Math.abs(turret.getCurrentPosition()) >= Constants.turretError) {
             Constants.setTurret(0, false, 0.6);
         }
         else if (!g2.dpad_down) {
             turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            double turretMultiplier = 0.4;
+            double turretMultiplier = 0.5;
 
             double triggerDiff = g2.right_trigger - g2.left_trigger;
             double turretInput = -square(triggerDiff) * turretMultiplier;
@@ -206,6 +203,7 @@ public class RefinedBot extends LinearOpMode {
             Constants.setClaw(Constants.ClawPosition.OPEN);
             extensionPos = Constants.extendInPos;
             isMoving = false;
+            isOpen = true;
         }
 
         if (gamepad2.right_bumper) {
@@ -220,7 +218,7 @@ public class RefinedBot extends LinearOpMode {
                 isOpen = !isOpen;
             }
         }
-        if (System.currentTimeMillis() - timer2 >= 200){
+        if (System.currentTimeMillis() - timer2 >= 150){
             hasPressed = false;
         }
 
