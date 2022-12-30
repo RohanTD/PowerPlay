@@ -22,6 +22,7 @@ public class RefinedBot extends LinearOpMode {
     Servo claw = null;
     Servo extend = null;
     Servo tilt = null;
+    Servo retraction = null;
 
     DcMotor turret = null;
 
@@ -52,8 +53,8 @@ public class RefinedBot extends LinearOpMode {
             module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
         }
 
-        g1 = gamepad1; //Defining gamepads Aarav Mehta
-        g2 = gamepad2;
+        g1 = g1; //Defining gs Aarav Mehta
+        g2 = g2;
 
         Constants.initHardware(hardwareMap);
 
@@ -64,6 +65,7 @@ public class RefinedBot extends LinearOpMode {
         claw = Constants.claw;
         extend = Constants.extend;
         tilt = Constants.tilt;
+        retraction = Constants.retraction;
 
         turret = Constants.turret;
 
@@ -71,6 +73,7 @@ public class RefinedBot extends LinearOpMode {
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         Constants.setClaw(Constants.ClawPosition.OPEN);
+        retraction.setPosition(Constants.retractionUpPos);
 
         waitForStart();
 
@@ -108,12 +111,12 @@ public class RefinedBot extends LinearOpMode {
             liftR.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             liftT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            double liftInput = square(gamepad2.left_stick_y) * Constants.liftPower;
+            double liftInput = square(g2.left_stick_y) * Constants.liftPower;
 
             isHolding = false;
             holdPos = 0;
 
-            if (liftR.getCurrentPosition() > Constants.liftLimit || gamepad2.left_stick_y < 0) {
+            if (liftR.getCurrentPosition() > Constants.liftLimit || g2.left_stick_y < 0) {
                 liftL.setPower(-liftInput);
                 liftR.setPower(liftInput);
                 liftT.setPower(-liftInput);
@@ -159,8 +162,11 @@ public class RefinedBot extends LinearOpMode {
     public void armCode(){
         extensionPos += -(g2.right_stick_x) * Constants.extendSensitivity;
 
-//        if (gamepad2.right_stick_y == -1)
-//            extensionPos = Constants.extendInPos;
+        if (g2.right_stick_x == -1)
+            extensionPos = Constants.extendInPos;
+
+        if (g2.right_stick_x == 1)
+            extensionPos = Constants.extendOutPos;
 
         if (extensionPos < Constants.extendOutPos)
             extensionPos = Constants.extendOutPos;
@@ -212,7 +218,7 @@ public class RefinedBot extends LinearOpMode {
         }
 
 
-        if (gamepad2.left_bumper) {
+        if (g2.left_bumper) {
             tiltPos = Constants.tiltDownPosition;
             hasTilted = false;
             if (!isMoving) {
@@ -229,7 +235,7 @@ public class RefinedBot extends LinearOpMode {
             isOpen = true;
         }
 
-        if (gamepad2.right_bumper) {
+        if (g2.right_bumper) {
             if (!hasPressed) {
                 timer2 = System.currentTimeMillis();
                 hasPressed = true;
@@ -251,9 +257,9 @@ public class RefinedBot extends LinearOpMode {
     }
 
     public void driveCode(){
-        double y = -gamepad1.left_stick_y;
-        double x = -gamepad1.left_stick_x;
-        double turn = -gamepad1.right_stick_x;
+        double y = -g1.left_stick_y;
+        double x = -g1.left_stick_x;
+        double turn = -g1.right_stick_x;
 
         double power = 2.0;
 
@@ -282,6 +288,11 @@ public class RefinedBot extends LinearOpMode {
         turn = Math.pow(turn, power) * turnMult;
 
         drive.setWeightedDrivePower(new Pose2d(y, x, turn));
+
+        if (g1.dpad_up)
+            retraction.setPosition(Constants.retractionUpPos);
+        if (g1.dpad_down)
+            retraction.setPosition(Constants.retractionDownPos);
     }
 
     public void telemetryCode(){

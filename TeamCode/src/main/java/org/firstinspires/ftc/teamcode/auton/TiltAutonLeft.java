@@ -29,6 +29,7 @@ public class TiltAutonLeft extends LinearOpMode {
     Servo claw;
     Servo extend;
     Servo tilt;
+    Servo retraction;
 
     Pose2d startPose = Constants.startPoseL;
     Pose2d pickupPose = Constants.pickupL;
@@ -59,9 +60,11 @@ public class TiltAutonLeft extends LinearOpMode {
         claw = Constants.claw;
         extend = Constants.extend;
         tilt = Constants.tilt;
+        retraction = Constants.retraction;
 
         Constants.setClaw(Constants.ClawPosition.CLOSED);
         tilt.setPosition(Constants.tiltUpPosition);
+        retraction.setPosition(Constants.retractionDownPos);
 
         drive = new SampleMecanumDrive(hardwareMap);
 

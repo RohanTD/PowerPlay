@@ -18,6 +18,7 @@ public class Constants {
     public static Servo claw;
     public static Servo extend;
     public static Servo tilt;
+    public static Servo retraction;
 
     // Not used rn but jic
     public enum Color {
@@ -79,6 +80,9 @@ public class Constants {
     public static double tiltDownPosition = 0.4;
     public static double tiltDropPosition = 0.6;
     public static double tiltSensitivity = 0.005;
+
+    public static double retractionUpPos = 1;
+    public static double retractionDownPos = 0;
 
     public static Pose2d startPoseL = new Pose2d(-33, -62, Math.toRadians(180));
     public static Pose2d startPoseR = new Pose2d(33, -63, Math.toRadians(180));
@@ -201,5 +205,7 @@ public class Constants {
         claw = hardwareMap.servo.get("claw");
         extend = hardwareMap.servo.get("extend");
         tilt = hardwareMap.servo.get("tilt");
+
+        retraction = hardwareMap.servo.get("retraction");
     }
 }
