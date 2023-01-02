@@ -18,8 +18,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name = "Tilt Auton Left", group = "TestBot")
-public class TiltAutonLeft extends LinearOpMode {
+@Autonomous(name = "Tilt Auton Right", group = "TestBot")
+public class TiltAutonRight extends LinearOpMode {
     SampleMecanumDrive drive;
 
     DcMotor liftL;
@@ -36,16 +36,16 @@ public class TiltAutonLeft extends LinearOpMode {
     WebcamName webcamName;
     OpenCVDebug.SignalSleevePipeline pipeline;
 
-    Pose2d startPose = Constants.startPoseL;
-    Pose2d pickupPose = Constants.pickupL;
-    Pose2d altDropPose = Constants.altDropL;
+    Pose2d startPose = Constants.startPoseR;
+    Pose2d pickupPose = Constants.pickupR;
+    Pose2d altDropPose = Constants.altDropR;
 
-    Pose2d pushOutPose = Constants.pushOutL;
-    Pose2d cutAcrossPose = Constants.cutAcrossL;
+    Pose2d pushOutPose = Constants.pushOutR;
+    Pose2d cutAcrossPose = Constants.cutAcrossR;
 
-    Vector2d parkLeftPose = Constants.parkLeftL;
-    Vector2d parkCenterPose = Constants.parkCenterL;
-    Vector2d parkRightPose = Constants.parkRightL;
+    Vector2d parkLeftPose = Constants.parkLeftR;
+    Vector2d parkCenterPose = Constants.parkCenterR;
+    Vector2d parkRightPose = Constants.parkRightR;
 
     int numCycles = 5;
 
@@ -56,7 +56,7 @@ public class TiltAutonLeft extends LinearOpMode {
         }
 
         Constants.initHardware(hardwareMap);
-        Constants.side = Constants.Side.LEFT;
+        Constants.side = Constants.Side.RIGHT;
 
         liftL = Constants.liftL;
         liftR = Constants.liftR;

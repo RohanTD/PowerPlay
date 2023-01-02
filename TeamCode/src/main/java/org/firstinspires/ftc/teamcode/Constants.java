@@ -43,8 +43,9 @@ public class Constants {
     public static Color alliance;
     public static Side side;
 
-    public static double offsetTimeDrop = 1.0;
-    public static double offsetTimePickup = 1.2;
+    public static double extendOffset = 1.0;
+    public static double preparePreloadOffset = 0.6;
+    public static double finishLiftPreloadOffset = 1.3;
 
     public static int redThresh = 150;
     public static int blueThresh = 150;
@@ -53,7 +54,8 @@ public class Constants {
     public static int regionX = 140;
     public static int regionY = 90;
 
-    public static int liftTargetHigh = -2400; // Encoder value for the lift in up position
+    public static int liftTargetHigh = -2350; // Encoder value for the lift in up position
+    public static int liftTargetHighTeleop = -2400;
     public static int liftTargetMid = -1590;
     public static int liftTargetLow = -780;
     public static int liftError = 20; // Amount of error allowed for lift positions (sbf as is)
@@ -64,8 +66,9 @@ public class Constants {
     public static int turretTarget180 = 1360; // Encoder value for the turret at back 180 degree position
     public static int turretTargetNeg90 = 700; // Encoder value for the turret at left 90 degree position
     public static int turretTargetAutonL = -1080;
+    public static int turretTargetAutonR = 1080;
 
-    public static int coneStackHighPosition = -500;
+    public static int coneStackHighPosition = -430;
     public static int coneStackInterval = 100;
 
     public static double turretPower = 1; // Default turret power in auton and teleop automation
@@ -89,7 +92,6 @@ public class Constants {
     public static double retractionDownPos = 0;
 
     public static Pose2d startPoseL = new Pose2d(-33, -62, Math.toRadians(180));
-    public static Pose2d startPoseR = new Pose2d(33, -63, Math.toRadians(180));
     public static Pose2d pickupL = new Pose2d(-52.75, -11, Math.toRadians(180));
     public static Pose2d mainDropL = new Pose2d(-22.5, -13, Math.toRadians(180));
     public static Pose2d altDropL = new Pose2d(-36, -11.5,Math.toRadians(180));
@@ -99,9 +101,23 @@ public class Constants {
     public static Pose2d firstAdjustmentL = new Pose2d(-12, -60, Math.toRadians(180));
     public static Pose2d firstDropL = new Pose2d(-12, -23, Math.toRadians(180));
 
+    public static Pose2d startPoseR = new Pose2d(33, -63, Math.toRadians(180));
+    public static Pose2d pickupR = new Pose2d(52.75, -11, Math.toRadians(0));
+    public static Pose2d mainDropR = new Pose2d(22.5, -13, Math.toRadians(0));
+    public static Pose2d altDropR = new Pose2d(36, -11.5,Math.toRadians(0));
+    public static Pose2d pushOutR = new Pose2d(36,-9,Math.toRadians(180));
+    public static Pose2d cutAcrossR = new Pose2d(36, -12, Math.toRadians(90));
+    public static Pose2d preCycleR = new Pose2d(12, -12, Math.toRadians(0));
+    public static Pose2d firstAdjustmentR = new Pose2d(12, -60, Math.toRadians(0));
+    public static Pose2d firstDropR = new Pose2d(12, -23, Math.toRadians(0));
+
     public static Vector2d parkLeftL = new Vector2d(-60, -12);
     public static Vector2d parkCenterL = new Vector2d(-36, -12);
     public static Vector2d parkRightL = new Vector2d(-12,-12);
+
+    public static Vector2d parkLeftR = new Vector2d(60, -12);
+    public static Vector2d parkCenterR = new Vector2d(36, -12);
+    public static Vector2d parkRightR = new Vector2d(12,-12);
 
     public static void dropAndReset(){
         Constants.setClaw(Constants.ClawPosition.OPEN);
@@ -118,15 +134,39 @@ public class Constants {
         Constants.sleepTime(400);
         tilt.setPosition(Constants.tiltDownPosition);
         Constants.sleepTime(100);
+
         Constants.setClaw(Constants.ClawPosition.OPEN);
-        Constants.sleepTime(100);
         extend.setPosition(Constants.extendInPos);
-        Constants.setLift(Constants.liftTargetHigh - 400,Constants.liftPower);
-        Constants.sleepTime(300);
+        Constants.sleepTime(100);
         Constants.setTurret(0,true,Constants.turretPower);
         Constants.setLift(Constants.coneStackHighPosition,Constants.liftPower);
         Constants.sleepTime(200);
     }
+
+    public static void collect(){
+        extend.setPosition(Constants.extendOutPos);
+        Constants.sleepTime(200);
+        Constants.setClaw(Constants.ClawPosition.CLOSED);
+        Constants.sleepTime(300);
+
+        Constants.setLift(Constants.liftTargetHigh,Constants.liftPower);
+        Constants.sleepTime(200);
+        extend.setPosition(Constants.extendInPos);
+        tilt.setPosition(Constants.tiltDropPosition);
+        Constants.sleepTime(200);
+
+        int turretTarget = turretTargetAutonL;
+        if (side == Side.RIGHT)
+            turretTarget = turretTargetAutonR;
+        Constants.setTurret(turretTarget,true,Constants.turretPower);
+    }
+
+    public static MarkerCallback preparePreload = () -> {
+        extend.setPosition(Constants.extendInPos);
+        Constants.setLift(Constants.liftTargetHigh, 0);
+        tilt.setPosition(Constants.tiltDropPosition);
+        Constants.setTurret(Constants.turretTargetAutonL,true,0.5);
+    };
 
     public static void sleepTime(long millis){
         try {

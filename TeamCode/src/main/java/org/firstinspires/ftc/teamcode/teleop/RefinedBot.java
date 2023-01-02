@@ -93,8 +93,8 @@ public class RefinedBot extends LinearOpMode {
     }
 
     public void liftAuto(){
-        if ((g2.dpad_up) && Math.abs(liftR.getCurrentPosition() - Constants.liftTargetHigh) >= Constants.liftError) {
-            Constants.setLift(Constants.liftTargetHigh, Constants.liftPower);
+        if ((g2.dpad_up) && Math.abs(liftR.getCurrentPosition() - Constants.liftTargetHighTeleop) >= Constants.liftError) {
+            Constants.setLift(Constants.liftTargetHighTeleop, Constants.liftPower);
         }
         if ((g2.dpad_left) && Math.abs(liftR.getCurrentPosition() - Constants.liftTargetMid) >= Constants.liftError) {
             Constants.setLift(Constants.liftTargetMid, Constants.liftPower);

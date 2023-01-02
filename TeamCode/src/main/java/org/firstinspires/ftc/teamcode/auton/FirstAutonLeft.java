@@ -130,7 +130,7 @@ public class FirstAutonLeft extends LinearOpMode {
             int currentCycleCounter = cycleCounter;
             TrajectorySequence cycle = drive.trajectorySequenceBuilder(mainDropPose)
                     .lineToLinearHeading(pickupPose)
-                    .addTemporalMarker(Constants.offsetTimePickup, ()->{
+                    .addTemporalMarker(Constants.extendOffset, ()->{
                         Constants.setClaw(Constants.ClawPosition.CLOSED);
                     })
                     .build();
