@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.vision;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Constants;
@@ -30,6 +31,9 @@ public class OpenCVDebug extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         drive = new SampleMecanumDrive(hardwareMap);
 
+        Servo camera = hardwareMap.servo.get("camera");
+        double cameraPos = Constants.cameraUpPos;
+
         webcamName = hardwareMap.get(WebcamName.class, "webcam");
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         phoneCam = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
@@ -47,6 +51,8 @@ public class OpenCVDebug extends LinearOpMode {
 
             }
         });
+
+
 
         waitForStart();
 
@@ -84,6 +90,11 @@ public class OpenCVDebug extends LinearOpMode {
                 phoneCam.setPipeline(pipeline);
             }
 
+            cameraPos += gamepad1.right_stick_x * 0.003;
+            camera.setPosition(cameraPos);
+            if (gamepad1.right_stick_button)
+                Constants.cameraUpPos = cameraPos;
+
             telemetry.addData("Analysis", pipeline.getAnalysis());
             telemetry.addData("Position", pipeline.position);
 
@@ -92,6 +103,9 @@ public class OpenCVDebug extends LinearOpMode {
 
             telemetry.addData("X Coordinate", Constants.regionX);
             telemetry.addData("Y Coordinate", Constants.regionY);
+
+            telemetry.addData("Camera Position", camera.getPosition());
+
             telemetry.update();
         }
     }
