@@ -119,9 +119,9 @@ public class Constants {
     public static Vector2d parkCenterL = new Vector2d(-36, -12);
     public static Vector2d parkRightL = new Vector2d(-12,-12);
 
-    public static Vector2d parkLeftR = new Vector2d(60, -12);
+    public static Vector2d parkLeftR = new Vector2d(12, -12);
     public static Vector2d parkCenterR = new Vector2d(36, -12);
-    public static Vector2d parkRightR = new Vector2d(12,-12);
+    public static Vector2d parkRightR = new Vector2d(60,-12);
 
     public static void dropAndReset(){
         Constants.setClaw(Constants.ClawPosition.OPEN);
