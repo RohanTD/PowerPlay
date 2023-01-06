@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Constants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
-@TeleOp(name = "Refined Bot", group = "TestBot")
+@TeleOp(name = "Refined Bot", group = "Alpha")
 public class RefinedBot extends LinearOpMode {
     SampleMecanumDrive drive;
 
@@ -81,6 +81,8 @@ public class RefinedBot extends LinearOpMode {
 
         Constants.setClaw(Constants.ClawPosition.OPEN);
         retraction.setPosition(Constants.retractionUpPos);
+        extend.setPosition(Constants.extendInPos - 0.3);
+        extensionPos = Constants.extendInPos - 0.3;
 
         waitForStart();
 

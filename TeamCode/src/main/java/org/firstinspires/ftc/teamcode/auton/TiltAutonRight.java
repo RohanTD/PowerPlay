@@ -96,9 +96,10 @@ public class TiltAutonRight extends LinearOpMode {
         TrajectorySequence preload = drive.trajectorySequenceBuilder(startPose)
                 .lineToLinearHeading(pushOutPose)
                 .lineToLinearHeading(cutAcrossPose)
+                .lineToLinearHeading(Constants.turnAdjustmentR)
                 .lineToLinearHeading(altDropPose)
                 .addTemporalMarker(Constants.preparePreloadOffset, Constants.preparePreload)
-                .addTemporalMarker(Constants.finishLiftPreloadOffset, () -> {
+                .addTemporalMarker(Constants.finishLiftPreloadOffset + 1.2, () -> {
                     Constants.setLift(Constants.liftTargetHigh, Constants.liftPower);
                 })
                 .build();
@@ -135,6 +136,7 @@ public class TiltAutonRight extends LinearOpMode {
 
             Constants.setLift(Constants.liftTargetHigh, Constants.liftPower);
             drive.followTrajectorySequence(preload);
+            Constants.preloadDrop();
             Constants.tiltDrop();
 
             runCycles(drive);
@@ -162,6 +164,9 @@ public class TiltAutonRight extends LinearOpMode {
 
             TrajectorySequence finishCycle = drive.trajectorySequenceBuilder(pickupPose)
                     .lineToLinearHeading(altDropPose)
+                    .addTemporalMarker(Constants.secondExtendOffset,()->{
+                        extend.setPosition(Constants.extendOutPos);
+                    })
                     .build();
 
             Constants.setLift(Math.min(Constants.coneStackHighPosition + (currentCycleCounter * Constants.coneStackInterval), 0), Constants.liftPower);

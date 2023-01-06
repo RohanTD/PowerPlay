@@ -135,6 +135,7 @@ public class TiltAutonLeft extends LinearOpMode {
 
             Constants.setLift(Constants.liftTargetHigh, Constants.liftPower);
             drive.followTrajectorySequence(preload);
+            Constants.preloadDrop();
             Constants.tiltDrop();
 
             runCycles(drive);

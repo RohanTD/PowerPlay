@@ -43,7 +43,8 @@ public class Constants {
     public static Color alliance;
     public static Side side;
 
-    public static double extendOffset = 1.0;
+    public static double extendOffset = 0.7;
+    public static double secondExtendOffset = 0.8;
     public static double preparePreloadOffset = 0.6;
     public static double finishLiftPreloadOffset = 1.3;
 
@@ -54,24 +55,26 @@ public class Constants {
     public static int regionX = 140;
     public static int regionY = 90;
 
-    public static int liftTargetHigh = -2350; // Encoder value for the lift in up position
-    public static int liftTargetHighTeleop = -2400;
+    public static int liftTargetHigh = -2290; // Encoder value for the lift in up position
+    public static int liftTargetHighTeleop = -2350;
     public static int liftTargetMid = -1590;
     public static int liftTargetLow = -780;
     public static int liftError = 20; // Amount of error allowed for lift positions (sbf as is)
-    public static int turretError = 20; // ^
+    public static int turretError = 43; // ^
     public static int liftLimit = -3200;
 
     public static int turretTarget90 = -700; // Encoder value for the turret at right 90 degree position
     public static int turretTarget180 = 1360; // Encoder value for the turret at back 180 degree position
     public static int turretTargetNeg90 = 700; // Encoder value for the turret at left 90 degree position
     public static int turretTargetAutonL = -1080;
-    public static int turretTargetAutonR = 1080;
+    public static int turretTargetAutonR = 1000;
+    public static int turretTargetTopRight = -400;
+    public static int turretTargetTopLeft = 400;
 
     public static int coneStackHighPosition = -430;
     public static int coneStackInterval = 100;
 
-    public static double turretPower = 1; // Default turret power in auton and teleop automation
+    public static double turretPower = 0.7; // Default turret power in auton and teleop automation
     public static double liftPower = 1; // Default lift power in auton and teleop automation
 
     public static double extendOutPos = 0.47; // Servo position on the extension when the extension is out
@@ -81,7 +84,7 @@ public class Constants {
     public static double extendSensitivity = 0.005;
 
     public static double tiltUpPosition = 1;
-    public static double tiltDownPosition = 0.4;
+    public static double tiltDownPosition = 0.42;
     public static double tiltDropPosition = 0.65;
     public static double tiltSensitivity = 0.005;
 
@@ -101,14 +104,15 @@ public class Constants {
     public static Pose2d firstAdjustmentL = new Pose2d(-12, -60, Math.toRadians(180));
     public static Pose2d firstDropL = new Pose2d(-12, -23, Math.toRadians(180));
 
-    public static Pose2d startPoseR = new Pose2d(33, -63, Math.toRadians(180));
-    public static Pose2d pickupR = new Pose2d(52.75, -11, Math.toRadians(0));
+    public static Pose2d startPoseR = new Pose2d(39, -63, Math.toRadians(180));
+    public static Pose2d pickupR = new Pose2d(54.9, -12.5, Math.toRadians(0));
     public static Pose2d mainDropR = new Pose2d(22.5, -13, Math.toRadians(0));
+    public static Pose2d turnAdjustmentR = new Pose2d(36,-11.75,Math.toRadians(0));
     public static Pose2d altDropR = new Pose2d(36, -11.5,Math.toRadians(0));
     public static Pose2d pushOutR = new Pose2d(36,-9,Math.toRadians(180));
-    public static Pose2d cutAcrossR = new Pose2d(36, -12, Math.toRadians(90));
+    public static Pose2d cutAcrossR = new Pose2d(36, -12, Math.toRadians(180));
     public static Pose2d preCycleR = new Pose2d(12, -12, Math.toRadians(0));
-    public static Pose2d firstAdjustmentR = new Pose2d(12, -60, Math.toRadians(0));
+    public static Pose2d firstAdjustmentR = new Pose2d(36, -63, Math.toRadians(180));
     public static Pose2d firstDropR = new Pose2d(12, -23, Math.toRadians(0));
 
     public static Vector2d parkLeftL = new Vector2d(-60, -12);
@@ -128,16 +132,21 @@ public class Constants {
         Constants.setTurret(0,true,Constants.turretPower);
     }
 
+    public static void preloadDrop(){
+        extend.setPosition(Constants.extendOutPos);
+        Constants.sleepTime(400);
+    }
+
     public static void tiltDrop(){
         tilt.setPosition(Constants.tiltDropPosition);
         extend.setPosition(Constants.extendOutPos);
-        Constants.sleepTime(400);
+//        Constants.sleepTime(100);
         tilt.setPosition(Constants.tiltDownPosition);
         Constants.sleepTime(100);
 
         Constants.setClaw(Constants.ClawPosition.OPEN);
         extend.setPosition(Constants.extendInPos);
-        Constants.sleepTime(100);
+        Constants.sleepTime(300);
         Constants.setTurret(0,true,Constants.turretPower);
         Constants.setLift(Constants.coneStackHighPosition,Constants.liftPower);
         Constants.sleepTime(200);
@@ -145,7 +154,6 @@ public class Constants {
 
     public static void collect(){
         extend.setPosition(Constants.extendOutPos);
-        Constants.sleepTime(200);
         Constants.setClaw(Constants.ClawPosition.CLOSED);
         Constants.sleepTime(300);
 
@@ -154,18 +162,24 @@ public class Constants {
         extend.setPosition(Constants.extendInPos);
         tilt.setPosition(Constants.tiltDropPosition);
         Constants.sleepTime(200);
+        Constants.setLift(Constants.liftTargetHigh,0);
 
         int turretTarget = turretTargetAutonL;
         if (side == Side.RIGHT)
             turretTarget = turretTargetAutonR;
         Constants.setTurret(turretTarget,true,Constants.turretPower);
+        Constants.sleepTime(300);
+        Constants.setLift(Constants.liftTargetHigh,Constants.liftPower);
     }
 
     public static MarkerCallback preparePreload = () -> {
         extend.setPosition(Constants.extendInPos);
         Constants.setLift(Constants.liftTargetHigh, 0);
         tilt.setPosition(Constants.tiltDropPosition);
-        Constants.setTurret(Constants.turretTargetAutonL,true,0.5);
+        int turretTarget = turretTargetAutonL;
+        if (side == Side.RIGHT)
+            turretTarget = turretTargetAutonR;
+        Constants.setTurret(turretTarget,true,0.5);
     };
 
     public static void sleepTime(long millis){
