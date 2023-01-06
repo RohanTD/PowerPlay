@@ -134,13 +134,12 @@ public class Constants {
 
     public static void preloadDrop(){
         extend.setPosition(Constants.extendOutPos);
+        tilt.setPosition(Constants.tiltDropPosition);
         Constants.sleepTime(400);
     }
 
     public static void tiltDrop(){
-        tilt.setPosition(Constants.tiltDropPosition);
         extend.setPosition(Constants.extendOutPos);
-//        Constants.sleepTime(100);
         tilt.setPosition(Constants.tiltDownPosition);
         Constants.sleepTime(100);
 

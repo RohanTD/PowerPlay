@@ -18,8 +18,8 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-@Autonomous(name = "Tilt Auton Left", group = "TestBot")
-public class TiltAutonLeft extends LinearOpMode {
+@Autonomous(name = "Super Fast", group = "TestBot")
+public class SuperFast extends LinearOpMode {
     SampleMecanumDrive drive;
 
     DcMotor liftL;
@@ -131,12 +131,20 @@ public class TiltAutonLeft extends LinearOpMode {
             telemetry.addData("Analysis", pipeline.getAnalysis());
             telemetry.addData("Position", pipeline.position);
             telemetry.update();
-            sleep(200);
+//            sleep(200);
 
             Constants.setLift(Constants.liftTargetHigh, Constants.liftPower);
             drive.followTrajectorySequence(preload);
-            Constants.preloadDrop();
-            Constants.tiltDrop();
+            extend.setPosition(Constants.extendOutPos);
+            tilt.setPosition(Constants.tiltDropPosition);
+            Constants.sleepTime(300);
+            tilt.setPosition(Constants.tiltDownPosition);
+            sleep(100);
+            Constants.setClaw(Constants.ClawPosition.OPEN);
+            extend.setPosition(Constants.extendInPos);
+            sleep(200);
+            Constants.setTurret(0,true,Constants.turretPower);
+            Constants.setLift(Constants.coneStackHighPosition,Constants.liftPower);
 
             runCycles(drive);
 
@@ -156,14 +164,14 @@ public class TiltAutonLeft extends LinearOpMode {
             int currentCycleCounter = cycleCounter;
             TrajectorySequence cycle = drive.trajectorySequenceBuilder(altDropPose)
                     .lineToLinearHeading(pickupPose)
-                    .addTemporalMarker(Constants.extendOffset, () -> {
+                    .addTemporalMarker(0.6, () -> {
                         extend.setPosition(Constants.extendOutPos);
                     })
                     .build();
 
             TrajectorySequence finishCycle = drive.trajectorySequenceBuilder(pickupPose)
                     .lineToLinearHeading(altDropPose)
-                    .addTemporalMarker(Constants.secondExtendOffset,()->{
+                    .addTemporalMarker(0.7, ()->{
                         extend.setPosition(Constants.extendOutPos);
                     })
                     .build();
@@ -171,10 +179,30 @@ public class TiltAutonLeft extends LinearOpMode {
             Constants.setLift(Math.min(Constants.coneStackHighPosition + (currentCycleCounter * Constants.coneStackInterval), 0), Constants.liftPower);
 
             drive.followTrajectorySequence(cycle);
-            Constants.collect();
+            extend.setPosition(Constants.extendOutPos);
+            Constants.setClaw(Constants.ClawPosition.CLOSED);
+            Constants.sleepTime(200);
+
+            Constants.setLift(Constants.liftTargetHigh,Constants.liftPower);
+            Constants.sleepTime(200);
+            extend.setPosition(Constants.extendInPos);
+            tilt.setPosition(Constants.tiltDropPosition);
+            int turretTarget = Constants.turretTargetAutonL;
+            if (Constants.side == Constants.Side.RIGHT)
+                turretTarget = Constants.turretTargetAutonR;
+            Constants.setTurret(turretTarget,true,Constants.turretPower);
 
             drive.followTrajectorySequence(finishCycle);
-            Constants.tiltDrop();
+            tilt.setPosition(Constants.tiltDropPosition);
+            extend.setPosition(Constants.extendOutPos);
+//        Constants.sleepTime(100);
+            tilt.setPosition(Constants.tiltDownPosition);
+            Constants.sleepTime(100);
+            Constants.setClaw(Constants.ClawPosition.OPEN);
+            extend.setPosition(Constants.extendInPos);
+            sleep(200);
+            Constants.setTurret(0,true,Constants.turretPower);
+            Constants.setLift(Constants.coneStackHighPosition,Constants.liftPower);
 
             cycleCounter++;
         }
